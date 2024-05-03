@@ -93,6 +93,7 @@ nav ul {
 nav li {
 	padding: 0 10px;
 	font-size: 1.2em;
+	cursor: pointer;
 }
 
 li:hover {
@@ -122,9 +123,37 @@ li:hover {
 	margin-bottom: 0.5em;
 }
 #portfolio h2 {
+	padding: 100px 0 0 0;
 	text-align: center;
 	margin-bottom: 1em;
 }
+
+.filters {
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: center;
+	padding: 50px;
+	gap: 10px;
+}
+
+.filters .btn {
+	color: #1D6154;
+	background-color: #FFFFFF;
+	font-family: 'Syne';
+	font-weight: 700;
+	font-size: 16px;
+	min-width: 100px;
+	padding: 9px 15px;
+	border: 1px solid #1D6154;
+	border-radius: 60px;
+	cursor: pointer;
+}
+
+.filters .btn:hover {
+	background: #1D6154;
+	color: #FFFFFF;
+}
+
 .gallery {
 	width: 100%;
 	display: grid;
@@ -178,6 +207,7 @@ input[type="submit"]{
 	width: 180px;
 	text-align: center;
 	border-radius: 60px ;
+	cursor: pointer;
 }
 
 footer nav ul {
