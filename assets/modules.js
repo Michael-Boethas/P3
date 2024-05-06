@@ -7,11 +7,8 @@ export async function fetchData(getDataUrl) {
     return data;
 }
 
-// Réception des catégories via l'API //////////////////////////////
-export async function fetchCategories () {
-    const response = await fetch(cst.getCategoriesUrl);
-    const categories = await response.json();
-    return categories;
+export async function sendData() {
+    const response = await fetch()
 }
 
 // Ajout des travaux au DOM ////////////////////////////////////////
@@ -40,7 +37,7 @@ export function displayWorks(works) {
 
 // Filtrage des travaux par catégorie ///////////////////////////////
 export async function filterWorks(filterCategoryId) {
-    let works = await fetchData(cst.getWorksUrl);
+    let works = await fetchData(cst.worksUrl);
     if (filterCategoryId === "filter-0") {
         displayWorks(works);
     } else {
@@ -57,7 +54,7 @@ export async function filterWorks(filterCategoryId) {
 
 // Création des filtres dynamiques //////////////////////////////////
 export async function createFiltersButtons() {
-    const categories = await fetchData(cst.getCategoriesUrl);
+    const categories = await fetchData(cst.categoriesUrl);
     const filters = document.querySelector(".filters");
     filters.innerHTML = "";
     const noFilter = document.createElement("button");

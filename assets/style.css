@@ -1,3 +1,7 @@
+
+/*** Reset CSS *********************************/
+
+
 /* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)
@@ -23,41 +27,88 @@ time, mark, audio, video {
 	font: inherit;
 	vertical-align: baseline;
 }
+
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
+
 body {
 	line-height: 1;
 }
+
 ol, ul {
 	list-style: none;
 }
+
 blockquote, q {
 	quotes: none;
 }
+
 blockquote:before, blockquote:after,
 q:before, q:after {
 	content: '';
 	content: none;
 }
+
 table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
-/** end reset css**/
+
+
+/******* End reset CSS ************************/
+
+
+/******* General styling *********************/
+
 body {
-	max-width: 1140px;
+	position: relative;
+	min-height: 100vh;
+	display: flex;
+	flex-flow: column;
+	justify-content: space-between;
 	margin:auto;
 	font-family: 'Work Sans' ;
 	font-size: 14px;
+	background: #fffef8;
 }
+
+main {
+	max-width: 1140px;
+	min-width: 50%;
+	display: flex;
+	flex-flow: column;
+	align-self: center;
+}
+
+.editing-mode-banner {
+	display: none;
+	justify-content: center;
+	align-items: center;
+	height: 59px;
+	font-size: 1.2em;
+	background: #000000;
+	color: #ffffff;
+}
+
+.editing-mode-banner img{
+	height: 1em;
+	width: 1em;
+	padding: 0 10px;
+}
+
 header {
 	display: flex;
-	justify-content: space-between;
+	justify-content: space-around;
 	margin: 50px 0
 }
+
+a {
+	all: unset;
+}
+
 section {
 	margin: 50px 0
 }
@@ -75,7 +126,6 @@ h1 > span {
 	font-family: 'Work Sans';
 	font-size:10px;
 	letter-spacing: 0.1em;
-;
 }
 
 h2{
@@ -84,12 +134,13 @@ h2{
 	font-size: 30px;
 	color: #1D6154
 }
+
 nav ul {
 	display: flex;
 	align-items: center;
 	list-style-type: none;
-
 }
+
 nav li {
 	padding: 0 10px;
 	font-size: 1.2em;
@@ -99,13 +150,16 @@ nav li {
 li:hover {
 	color: #B1663C;
 }
+
 #introduction {
 	display: flex;
 	align-items: center;
 }
+
 #introduction figure {
 	flex: 1
 }
+
 #introduction img {
 	display: block;
 	margin: auto;
@@ -115,6 +169,7 @@ li:hover {
 #introduction article {
 	flex: 1
 }
+
 #introduction h2 {
 	margin-bottom: 1em;
 }
@@ -122,10 +177,28 @@ li:hover {
 #introduction p {
 	margin-bottom: 0.5em;
 }
+
 #portfolio h2 {
-	padding: 100px 0 0 0;
+	padding: 0 20px 0 0 ;
 	text-align: center;
-	margin-bottom: 1em;
+}
+
+.projets-title {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 14px;
+}
+
+.projets-title img, .projets-title span {
+	display: none;
+	max-height: 1em;
+	padding: 0 5px;
+	cursor: pointer;
+}
+
+.projets-title span:hover {
+	color: #B1663C;
 }
 
 .filters {
@@ -164,38 +237,53 @@ li:hover {
 
 .gallery img {
 	width: 100%;
-
 }
-#contact {
+
+#contact, #login{
 	width: 50%;
-margin: auto;
+	margin: auto;
 }
-#contact > * {
-	text-align: center;
 
+#contact > *, #login > * {
+	text-align: center;
 }
-#contact h2{
+
+#contact h2, #login h2{
 	margin-bottom: 20px;
 }
-#contact form {
+
+#contact form, #login form {
 	text-align: left;
 	margin-top:30px;
 	display: flex;
 	flex-direction: column;
 }
 
-#contact input {
+#contact input, #login input {
 	height: 50px;
 	font-size: 1.2em;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
-#contact label {
+
+#contact label, #login label {
 	margin: 2em 0 1em 0;
 }
-#contact textarea {
+
+#contact textarea, #login textarea {
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+
+#login span {
+	text-decoration: underline;
+	text-align: center;
+	font-size: 1.2em;
+}
+
+#login a:hover {
+	cursor: pointer;
+	color: #B1663C;
 }
 
 input[type="submit"]{
@@ -210,9 +298,21 @@ input[type="submit"]{
 	cursor: pointer;
 }
 
+footer {
+	display: flex;
+	justify-content: flex-end;
+	background: #ffffff;
+	height: 60px;
+}
+
+footer nav {
+	padding: 0 100px;
+	display: flex;
+}
+
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;
-	margin: 2em
+	align-self: center;
+	margin: 2em;
 }
-
