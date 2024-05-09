@@ -88,15 +88,10 @@ main {
 	justify-content: center;
 	align-items: center;
 	height: 59px;
-	font-size: 1.2em;
+	font-size: 18px;
 	background: #000000;
 	color: #ffffff;
-}
-
-.editing-mode-banner img{
-	height: 1em;
-	width: 1em;
-	padding: 0 10px;
+	gap: 15px;
 }
 
 header {
@@ -183,21 +178,20 @@ li:hover {
 	text-align: center;
 }
 
-.projets-title {
+.projets-heading {
 	display: flex;
 	justify-content: center;
-	align-items: center;
-	font-size: 14px;
 }
 
-.projets-title img, .projets-title span {
+.edit-button {
 	display: none;
-	max-height: 1em;
-	padding: 0 5px;
+	align-items: center;
+	font-size: 16px;
 	cursor: pointer;
+	gap: 5px;
 }
 
-.projets-title span:hover {
+.edit-button span:hover {
 	color: #B1663C;
 }
 
@@ -286,6 +280,13 @@ li:hover {
 	color: #B1663C;
 }
 
+#login .error-message {
+	color: red;
+	font-size: 20px;
+	text-decoration: none;
+	padding-bottom: 20px;
+}
+
 input[type="submit"]{
 	font-family: 'Syne';
 	font-weight: 700;
@@ -316,3 +317,11 @@ footer nav ul {
 	align-self: center;
 	margin: 2em;
 }
+
+@keyframes jiggle {
+	0% { transform: translateX(-5px); }
+	25% { transform: translateX(5px); }
+	50% { transform: translateX(-5px); }
+	75% { transform: translateX(5px); }
+	100% { transform: translateX(0); }
+  }

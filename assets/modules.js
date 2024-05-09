@@ -1,14 +1,28 @@
-import * as cst from "./constants.js";
+import { WORKS_URL, CATEGORIES_URL } from "./constants.js";
 
-// Réception des données via l'API ////////////////////////////////
-export async function fetchData(getDataUrl) {
-    const response = await fetch(getDataUrl);
+// // Réception des données via l'API ////////////////////////////////
+// export async function fetchData(dataUrl) {
+//     const data = await fetch(dataUrl)
+//                 .then(data => data.json())
+//                 .catch(err => console.log(err));
+//     return data;
+// }
+
+// Réception des données via l'API ///////////////////////////////
+export async function fetchData(dataUrl) {
+    const response = await fetch(dataUrl);
     const data = await response.json();
     return data;
 }
 
-export async function sendData() {
-    const response = await fetch()
+// Envoi des données à l'API ////////////////////////////////////////
+export async function sendData(url, bodyJson) {
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(bodyJson)
+    });
+    return await response.json();
 }
 
 // Ajout des travaux au DOM ////////////////////////////////////////
@@ -37,7 +51,7 @@ export function displayWorks(works) {
 
 // Filtrage des travaux par catégorie ///////////////////////////////
 export async function filterWorks(filterCategoryId) {
-    let works = await fetchData(cst.worksUrl);
+    let works = await fetchData(WORKS_URL);
     if (filterCategoryId === "filter-0") {
         displayWorks(works);
     } else {
@@ -54,7 +68,7 @@ export async function filterWorks(filterCategoryId) {
 
 // Création des filtres dynamiques //////////////////////////////////
 export async function createFiltersButtons() {
-    const categories = await fetchData(cst.categoriesUrl);
+    const categories = await fetchData(CATEGORIES_URL);
     const filters = document.querySelector(".filters");
     filters.innerHTML = "";
     const noFilter = document.createElement("button");
