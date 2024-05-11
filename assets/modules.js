@@ -1,4 +1,4 @@
-import { WORKS_URL, CATEGORIES_URL } from "./constants.js";
+import { WORKS_URL, CATEGORIES_URL, FILTERS, MAIN_GALLERY } from "./constants.js";
 
 // // Réception des données via l'API ////////////////////////////////
 // export async function fetchData(dataUrl) {
@@ -25,35 +25,46 @@ export async function sendData(url, bodyJson) {
     return await response.json();
 }
 
+// Suppression du token de connexion et redirection //////////////// 
+export const logout = () => {
+    sessionStorage.removeItem("token");
+    window.location.href = "./index.html";
+}
+
 // Ajout des travaux au DOM ////////////////////////////////////////
-export function addWork(work) {
-    const gallery = document.querySelector(".gallery");
+export function addWork(work, gallery) {
     const item = document.createElement("figure");
     const photo = document.createElement("img");
     photo.src = work.imageUrl;
     photo.alt = work.title;
-    const caption = document.createElement("figcaption");
-    caption.innerText = work.title;
     item.appendChild(photo);
-    item.appendChild(caption);
     item.dataset.id = work.id;
     item.dataset.categoryId = work.categoryId;
     item.dataset.userId = work.userId;
+    if (gallery === MAIN_GALLERY) {
+        const caption = document.createElement("figcaption");
+        caption.innerText = work.title;
+        item.appendChild(caption);
+
+    } else {
+        const trashIcon = document.createElement("i")
+        trashIcon.calssName = "fa-solid fa-trash-can"
+        item.appendChild(trashIcon);
+    }
     gallery.appendChild(item);
 }
 
 // Rafraichissement de la gallerie et affichage des travaux /////////
-export function displayWorks(works) {
-    const gallery = document.querySelector(".gallery");
+export function displayWorks(works, gallery) {
     gallery.innerHTML = "";
-    works.forEach(work => addWork(work));
+    works.forEach(work => addWork(work, gallery));
 }
 
 // Filtrage des travaux par catégorie ///////////////////////////////
 export async function filterWorks(filterCategoryId) {
     let works = await fetchData(WORKS_URL);
     if (filterCategoryId === "filter-0") {
-        displayWorks(works);
+        displayWorks(works, MAIN_GALLERY);
     } else {
         let filteredWorks = [];
         works.forEach(work => {
@@ -61,7 +72,7 @@ export async function filterWorks(filterCategoryId) {
                 filteredWorks.push(work);
             }
         });
-        displayWorks(filteredWorks);
+        displayWorks(filteredWorks, MAIN_GALLERY);
         return filteredWorks;
     }
 }
@@ -69,20 +80,19 @@ export async function filterWorks(filterCategoryId) {
 // Création des filtres dynamiques //////////////////////////////////
 export async function createFiltersButtons() {
     const categories = await fetchData(CATEGORIES_URL);
-    const filters = document.querySelector(".filters");
-    filters.innerHTML = "";
+    FILTERS.innerHTML = "";
     const noFilter = document.createElement("button");
     noFilter.className = "btn";
     noFilter.id = "filter-0";
     noFilter.innerText = "Tous";
     noFilter.addEventListener("click", (event) => filterWorks(event.target.id));
-    filters.appendChild(noFilter);
+    FILTERS.appendChild(noFilter);
     categories.forEach(categorie => {
         const item = document.createElement("button");
         item.className = "btn";
         item.id = "filter-" + categorie.id;
         item.innerText = categorie.name;
         item.addEventListener("click", (event) => filterWorks(event.target.id));
-        filters.appendChild(item);
+        FILTERS.appendChild(item);
     });
 }

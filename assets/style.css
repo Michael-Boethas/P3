@@ -75,6 +75,62 @@ body {
 	background: #fffef8;
 }
 
+#layer {
+	display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+	background: #ff000080;
+}
+
+#modal {
+	display: flex;
+	display: none;
+	flex-flow: column;
+	align-items: center;
+	width: 630px;
+	height: 688px;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	border-radius: 10px;
+	background: #ffffff;
+}
+
+#modal .close-button {
+	position: absolute;
+    top: 30px;
+    right: 35px;
+    cursor: pointer;
+    font-size: 30px;
+}
+
+#modal h2 {
+	font-family: 'Work Sans', sans-serif;
+	font-size: 30px;
+	font-weight: 400;
+	color: #000000;
+	padding: 50px;
+}
+
+#modal .modal-gallery {
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	grid-template-rows: auto;
+	gap: 10px;
+	position: static;
+	height: 65%;
+	width: 70%;
+	background: #ffffff;
+	border-bottom: 1px solid #B3B3B3;
+	overflow-y: auto;
+}
+
+#modal .btn {
+	min-width: 45%;
+}
+
 main {
 	max-width: 1140px;
 	min-width: 50%;
@@ -195,7 +251,7 @@ li:hover {
 	color: #B1663C;
 }
 
-.filters {
+#filters {
 	display: flex;
 	flex-flow: row wrap;
 	justify-content: center;
@@ -203,7 +259,7 @@ li:hover {
 	gap: 10px;
 }
 
-.filters .btn {
+.btn {
 	color: #1D6154;
 	background-color: #FFFFFF;
 	font-family: 'Syne';
@@ -216,12 +272,12 @@ li:hover {
 	cursor: pointer;
 }
 
-.filters .btn:hover {
+#filters .btn:hover {
 	background: #1D6154;
 	color: #FFFFFF;
 }
 
-.gallery {
+#main-gallery {
 	width: 100%;
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;
@@ -229,7 +285,7 @@ li:hover {
 	grid-row-gap: 20px;
 }
 
-.gallery img {
+#main-gallery img {
 	width: 100%;
 }
 
@@ -287,7 +343,7 @@ li:hover {
 	padding-bottom: 20px;
 }
 
-input[type="submit"]{
+input[type="submit"], #modal .btn {
 	font-family: 'Syne';
 	font-weight: 700;
 	color: white;

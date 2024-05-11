@@ -13,8 +13,19 @@
 	<script type="module" src="assets/script.js" defer></script>
 </head>
 <body>
+
+	<div id="layer"></div>
+	<div id="modal">
+		<span class="close-button">&times;</span>
+		<h2>Galerie photo</h2>
+		<div class="modal-gallery">
+		</div>
+		<input class="btn" type="button" value="Ajouter une photo">
+	</div>
+
 	<div class="editing-mode-banner"><i class="fa-regular fa-pen-to-square"></i>
 	<span>Mode édition</span></div>
+
 	<header>
 		<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
 		<nav>
@@ -26,6 +37,7 @@
 			</ul>
 		</nav>
 	</header>
+
 	<main>
 		<section id="introduction">
 			<figure>
@@ -46,9 +58,9 @@
 					<span>modifier</span>
 				</div>
 			</div>
-			<div class="filters">
+			<div id="filters">
 			</div>
-			<div class="gallery">
+			<div id="main-gallery">
 			</div>
 		</section>
 		<section id="contact">
@@ -68,6 +80,7 @@
 			</form>
 		</section>
 	</main>
+
 	<footer>
 		<nav>
 			<ul>
@@ -75,5 +88,6 @@
 			</ul>
 		</nav>
 	</footer>
+
 </body>
 </html>
