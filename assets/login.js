@@ -14,6 +14,7 @@ const handleLoginButton = async (event) => {
         });
 
     if (loginData.token) {
+        sessionStorage.setItem("userId", loginData.userId)
         sessionStorage.setItem("token", loginData.token);
         window.location.href = "./index.html";
     } else {
@@ -31,8 +32,4 @@ const handleLoginButton = async (event) => {
     }
 };
 
-// Event listener du bouton connexion ////////////////////////////
-// function loginButton() {
-    LOGIN_SUBMIT_BUTTON.addEventListener("click", handleLoginButton);
-// };
-// loginButton();
+LOGIN_SUBMIT_BUTTON.addEventListener("click", handleLoginButton);

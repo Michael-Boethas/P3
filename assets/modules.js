@@ -1,10 +1,15 @@
-import { WORKS_URL, CATEGORIES_URL, FILTERS, MAIN_GALLERY } from "./constants.js";
+import { WORKS_URL, CATEGORIES_URL, FILTERS, MAIN_GALLERY,
+     LAYER, MODAL_WINDOW, MODAL_GALLERY, 
+     TRASH_ICON} from "./constants.js";
 
 // // Réception des données via l'API ////////////////////////////////
 // export async function fetchData(dataUrl) {
 //     const data = await fetch(dataUrl)
 //                 .then(data => data.json())
-//                 .catch(err => console.log(err));
+//                 .catch(err => {
+//                     showModal();
+//                     console.log(err)
+//                 });
 //     return data;
 // }
 
@@ -15,7 +20,7 @@ export async function fetchData(dataUrl) {
     return data;
 }
 
-// Envoi des données à l'API ////////////////////////////////////////
+// Envoi des données à l'API //////////////////////////////////////
 export async function sendData(url, bodyJson) {
     const response = await fetch(url, {
         method: 'POST',
@@ -25,6 +30,61 @@ export async function sendData(url, bodyJson) {
     return await response.json();
 }
 
+// Suppression d'un travail sur la base de données /////////////////
+export async function deleteWorkRequest(id) {
+    const token = sessionStorage.getItem("token");
+    const userId = sessionStorage.getItem("userId")
+    await fetch(`${WORKS_URL}/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'accept': '*/*',
+          'Authorization': `Bearer ${token}`,
+          'User-Id': userId
+      }
+    });
+}
+
+
+// Mise en place du mode édition ////////////////////////////////////
+export const setEditMode = () => {
+    if(sessionStorage.getItem("token")) {
+        const editingModeBanner = document.querySelector(".editing-mode-banner");
+        editingModeBanner.style.display = "flex";
+
+        const loginTab = document.querySelector("header nav ul li:nth-child(3)")
+        loginTab.textContent = "logout";
+        loginTab.addEventListener("click", logout);
+    
+        FILTERS.remove();
+    
+        const projectsHeading = document.querySelector(".projets-heading");
+        projectsHeading.style.padding = "0 0 110px 0"
+    
+        const editButton = document.querySelector(".edit-button");
+        editButton.style.display = "flex";
+        editButton.addEventListener("click", showModal)
+
+        const closeButton = document.querySelector(".close-button");
+        closeButton.addEventListener("click", hideModal);
+        LAYER.addEventListener("click", hideModal);
+    }
+}
+
+// Affichage de la modale /////////////////////////////////////////
+export const showModal = async () => {
+    LAYER.style.display = "block";
+    MODAL_WINDOW.style.display = "flex";
+    MODAL_GALLERY.style.display = "grid";
+    const works = await fetchData(WORKS_URL);
+    displayWorks(works, MODAL_GALLERY);
+}
+
+// Fermeture de la modale //////////////////////////////////////////
+export const hideModal = () => {
+    LAYER.style.display = "none";
+    MODAL_WINDOW.style.display = "none";
+}
+
 // Suppression du token de connexion et redirection //////////////// 
 export const logout = () => {
     sessionStorage.removeItem("token");
@@ -32,7 +92,7 @@ export const logout = () => {
 }
 
 // Ajout des travaux au DOM ////////////////////////////////////////
-export function addWork(work, gallery) {
+export async function appendWork(work, gallery) {
     const item = document.createElement("figure");
     const photo = document.createElement("img");
     photo.src = work.imageUrl;
@@ -45,19 +105,30 @@ export function addWork(work, gallery) {
         const caption = document.createElement("figcaption");
         caption.innerText = work.title;
         item.appendChild(caption);
-
     } else {
-        const trashIcon = document.createElement("i")
-        trashIcon.calssName = "fa-solid fa-trash-can"
+        const trashIcon = document.createElement("i");
+        trashIcon.className = "fa-solid fa-trash-can";
+        trashIcon.dataset.id = work.id;
         item.appendChild(trashIcon);
+        trashIcon.addEventListener("click", async (event) => 
+            await deleteWork(event.target.dataset.id));
     }
     gallery.appendChild(item);
 }
 
+// Suppression d'un travail et rafraichissement /////////////////////
+export const deleteWork = async (id) => {
+    await deleteWorkRequest(id);
+    const works = await fetchData(WORKS_URL);
+    displayWorks(works, MODAL_GALLERY);
+    displayWorks(works, MAIN_GALLERY);
+} 
+
+
 // Rafraichissement de la gallerie et affichage des travaux /////////
 export function displayWorks(works, gallery) {
     gallery.innerHTML = "";
-    works.forEach(work => addWork(work, gallery));
+    works.forEach(work => appendWork(work, gallery));
 }
 
 // Filtrage des travaux par catégorie ///////////////////////////////
