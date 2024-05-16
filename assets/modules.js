@@ -1,6 +1,5 @@
 import { WORKS_URL, CATEGORIES_URL, FILTERS, MAIN_GALLERY,
-     LAYER, MODAL_WINDOW, MODAL_GALLERY, 
-     TRASH_ICON} from "./constants.js";
+     LAYER, MODAL_WINDOW, MODAL_GALLERY } from "./constants.js";
 
 // // Réception des données via l'API ////////////////////////////////
 // export async function fetchData(dataUrl) {
@@ -44,7 +43,6 @@ export async function deleteWorkRequest(id) {
     });
 }
 
-
 // Mise en place du mode édition ////////////////////////////////////
 export const setEditMode = () => {
     if(sessionStorage.getItem("token")) {
@@ -75,6 +73,7 @@ export const showModal = async () => {
     LAYER.style.display = "block";
     MODAL_WINDOW.style.display = "flex";
     MODAL_GALLERY.style.display = "grid";
+    document.querySelector("#modal h2").textContent = "Galerie photo";
     const works = await fetchData(WORKS_URL);
     displayWorks(works, MODAL_GALLERY);
 }

@@ -12,3 +12,6 @@ export const MODAL_UPLOAD_FORM = document.getElementById("modal-upload-form");
 export const TRASH_ICON = document.querySelectorAll(".fa-trash-can");
 export const FILTERS = document.getElementById("filters");
 export const LOGIN_SUBMIT_BUTTON = document.querySelector('input[value="Connexion"]');
+
+
+export const TOKEN_NAME = "token"
