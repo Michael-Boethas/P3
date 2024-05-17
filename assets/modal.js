@@ -1,6 +1,7 @@
 import * as modules from "./modules.js"
 import { MODAL_GALLERY, MODAL_UPLOAD_FORM, CONFIRM_BUTTON,
-         ADD_PHOTO_FIELD, TITLE_FIELD, CATERGORY_FIELD, GO_BACK_BUTTON,  } from "./constants.js"
+         ADD_PHOTO_FIELD, TITLE_FIELD, CATERGORY_FIELD, GO_BACK_BUTTON,
+         WORKS_URL, TOKEN_NAME, USER_ID } from "./constants.js"
 
 
 function checkInputFields() {
@@ -19,8 +20,19 @@ function toggleFormSubmit() {
     ADD_PHOTO_FIELD.addEventListener("input", toggleGreyedOut);
     TITLE_FIELD.addEventListener("input", toggleGreyedOut);
     CATERGORY_FIELD.addEventListener("change", toggleGreyedOut);
-
-    CONFIRM_BUTTON.addEventListener("click", console.log("form submitted"));
+    const token = sessionStorage.getItem(TOKEN_NAME);
+    const userId = sessionStorage.getItem(USER_ID);
+    CONFIRM_BUTTON.addEventListener("click", modules.sendData(
+        WORKS_URL,
+        {
+            "accept": "application/json",
+            "Authorization": `Bearer ${token}`,
+            "User-Id": userId
+        },
+        {
+            
+        }
+    ));
 }
 
 // Gestion de la selection de Photo /////////////////////////////////////
@@ -45,13 +57,14 @@ function showModalUploadForm() {
     CONFIRM_BUTTON.classList.add("btn--greyed-out");
     ADD_PHOTO_FIELD.removeEventListener("click", pickPhoto);
     ADD_PHOTO_FIELD.addEventListener("input", pickPhoto);
+    TITLE_FIELD.value = "";
+    CATERGORY_FIELD.value = "no-selection";
     toggleFormSubmit();
 }
 
 function showModalGallery() {
     MODAL_UPLOAD_FORM.style.display = "none";
     GO_BACK_BUTTON.style.display = "none";
-    // await modules.showModal();
     MODAL_GALLERY.style.display = "grid";
     CONFIRM_BUTTON.value = "Ajouter une photo";
     CONFIRM_BUTTON.classList.remove("btn--greyed-out");

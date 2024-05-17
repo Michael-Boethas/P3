@@ -1,6 +1,7 @@
 import { WORKS_URL, CATEGORIES_URL, FILTERS, MAIN_GALLERY,
      LAYER, MODAL_WINDOW, MODAL_GALLERY, 
-     MODAL_UPLOAD_FORM} from "./constants.js";
+     MODAL_UPLOAD_FORM, CONFIRM_BUTTON,
+     TOKEN_NAME, USER_ID} from "./constants.js";
 
 // // Réception des données via l'API ////////////////////////////////
 // export async function fetchData(dataUrl) {
@@ -31,8 +32,8 @@ export async function sendData(url, headersJson, bodyJson) {
 
 // Suppression d'un travail sur la base de données /////////////////
 export async function deleteWorkRequest(id) {
-    const token = sessionStorage.getItem("token");
-    const userId = sessionStorage.getItem("userId")
+    const token = sessionStorage.getItem(TOKEN_NAME);
+    const userId = sessionStorage.getItem(USER_ID);
     await fetch(`${WORKS_URL}/${id}`, {
         method: 'DELETE',
         headers: {
@@ -45,7 +46,7 @@ export async function deleteWorkRequest(id) {
 
 // Mise en place du mode édition ////////////////////////////////////
 export async function setEditMode(){
-    if(sessionStorage.getItem("token")) {
+    if(sessionStorage.getItem(TOKEN_NAME)) {
         const editingModeBanner = document.querySelector(".editing-mode-banner");
         editingModeBanner.style.display = "flex";
 
@@ -84,7 +85,8 @@ export async function hideModal() {
     MODAL_WINDOW.style.display = "none";
     MODAL_UPLOAD_FORM.style.display= "none";
     const confirmButton = document.querySelector("#modal input[type='button']");
-    confirmButton.classList.remove("btn--greyed-out");
+    CONFIRM_BUTTON.value = "Ajouter une photo";
+    CONFIRM_BUTTON.classList.remove("btn--greyed-out");
     const uploadedPhoto = document.querySelector(".photo-upload-container img");
     if (uploadedPhoto) {
         document.getElementById("add-photo").value = "";
@@ -97,7 +99,7 @@ export async function hideModal() {
 
 // Suppression du token de connexion et redirection //////////////// 
 export const logout = () => {
-    sessionStorage.removeItem("token");
+    sessionStorage.removeItem(TOKEN_NAME);
     window.location.href = "./index.html";
 }
 

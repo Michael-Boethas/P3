@@ -1,4 +1,4 @@
-import { USERS_LOGIN_URL, LOGIN_SUBMIT_BUTTON, TOKEN_NAME } from "./constants.js";
+import { USERS_LOGIN_URL, LOGIN_SUBMIT_BUTTON, TOKEN_NAME, USER_ID } from "./constants.js";
 import * as modules from "./modules.js";
 
 
@@ -17,7 +17,7 @@ const handleLoginButton = async (event) => {
         });
 
     if (loginData.token) {
-        sessionStorage.setItem("userId", loginData.userId)
+        sessionStorage.setItem(USER_ID, loginData.userId);
         sessionStorage.setItem(TOKEN_NAME, loginData.token);
         window.location.href = "./index.html";
     } else {
