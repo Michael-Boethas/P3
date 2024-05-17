@@ -1,7 +1,8 @@
 import * as modules from "./modules.js"
 import { MODAL_GALLERY, MODAL_UPLOAD_FORM, CONFIRM_BUTTON,
          ADD_PHOTO_FIELD, TITLE_FIELD, CATERGORY_FIELD, GO_BACK_BUTTON,
-         WORKS_URL, TOKEN_NAME, USER_ID } from "./constants.js"
+         WORKS_URL, TOKEN_NAME, USER_ID, 
+         CATEGORIES_URL} from "./constants.js"
 
 
 function checkInputFields() {
@@ -20,11 +21,18 @@ function toggleFormSubmit() {
     ADD_PHOTO_FIELD.addEventListener("input", toggleGreyedOut);
     TITLE_FIELD.addEventListener("input", toggleGreyedOut);
     CATERGORY_FIELD.addEventListener("change", toggleGreyedOut);
-    const token = sessionStorage.getItem(TOKEN_NAME);
-    const userId = sessionStorage.getItem(USER_ID);
     CONFIRM_BUTTON.addEventListener("click", async (event) => {
         event.preventDefault();
-        modules.sendData(
+        const token = sessionStorage.getItem(TOKEN_NAME);
+        const userId = sessionStorage.getItem(USER_ID);
+        // const formData = new FormData();
+        // formData.append('title', TITLE_FIELD.value);
+        // formData.append('category', CATERGORY_FIELD.value);
+        // formData.append('image', ADD_PHOTO_FIELD.value); 
+        // const headers = {
+        //    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxNTUwNDc1MCwiZXhwIjoxNzE1NTkxMTUwfQ.zosK7or3x5fcoNzFrrpH5J-RTK3e95RaYXdaxFXvUrw'
+        // };
+        await modules.sendData(
             WORKS_URL,
             {
                 "accept": "application/json",
@@ -32,9 +40,11 @@ function toggleFormSubmit() {
                 "User-Id": userId
             },
             {
-                
+                "title": TITLE_FIELD.value,
+                "category": CATERGORY_FIELD.value,
+                "image": ADD_PHOTO_FIELD.value
             }
-        )
+        );
     });
 }
 
@@ -53,7 +63,8 @@ function pickPhoto() {
     }
 }
 
-function showModalUploadForm() {
+
+async function showModalUploadForm() {
     MODAL_GALLERY.style.display = "none";
     MODAL_UPLOAD_FORM.style.display = "flex";
     CONFIRM_BUTTON.value = "Valider";
@@ -61,7 +72,14 @@ function showModalUploadForm() {
     ADD_PHOTO_FIELD.removeEventListener("click", pickPhoto);
     ADD_PHOTO_FIELD.addEventListener("input", pickPhoto);
     TITLE_FIELD.value = "";
-    CATERGORY_FIELD.value = "no-selection";
+    const categories = await modules.fetchData(CATEGORIES_URL);
+    CATERGORY_FIELD.innerHTML = "<option value=no-selection></option>";
+    categories.forEach(category => {
+        const option = document.createElement("option");
+        option.value = "option" + category.id;
+        option.textContent = category.name;
+        CATERGORY_FIELD.appendChild(option);
+    })
     toggleFormSubmit();
 }
 
