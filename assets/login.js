@@ -9,6 +9,9 @@ const handleLoginButton = async (event) => {
     const passwordField = document.getElementById("password");
     const loginData = await modules.sendData(USERS_LOGIN_URL,
         {
+            'Content-Type': 'application/json'
+        },
+        {
             email: emailField.value,
             password: passwordField.value
         });

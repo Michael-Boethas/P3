@@ -1,5 +1,6 @@
 import { WORKS_URL, CATEGORIES_URL, FILTERS, MAIN_GALLERY,
-     LAYER, MODAL_WINDOW, MODAL_GALLERY } from "./constants.js";
+     LAYER, MODAL_WINDOW, MODAL_GALLERY, 
+     MODAL_UPLOAD_FORM} from "./constants.js";
 
 // // Réception des données via l'API ////////////////////////////////
 // export async function fetchData(dataUrl) {
@@ -15,15 +16,14 @@ import { WORKS_URL, CATEGORIES_URL, FILTERS, MAIN_GALLERY,
 // Réception des données via l'API ///////////////////////////////
 export async function fetchData(dataUrl) {
     const response = await fetch(dataUrl);
-    const data = await response.json();
-    return data;
+    return await response.json();
 }
 
 // Envoi des données à l'API //////////////////////////////////////
-export async function sendData(url, bodyJson) {
+export async function sendData(url, headersJson, bodyJson) {
     const response = await fetch(url, {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: headersJson,
         body: JSON.stringify(bodyJson)
     });
     return await response.json();
@@ -44,7 +44,7 @@ export async function deleteWorkRequest(id) {
 }
 
 // Mise en place du mode édition ////////////////////////////////////
-export const setEditMode = () => {
+export async function setEditMode(){
     if(sessionStorage.getItem("token")) {
         const editingModeBanner = document.querySelector(".editing-mode-banner");
         editingModeBanner.style.display = "flex";
@@ -60,7 +60,7 @@ export const setEditMode = () => {
     
         const editButton = document.querySelector(".edit-button");
         editButton.style.display = "flex";
-        editButton.addEventListener("click", showModal)
+        editButton.addEventListener("click", showModal);
 
         const closeButton = document.querySelector(".close-button");
         closeButton.addEventListener("click", hideModal);
@@ -69,7 +69,7 @@ export const setEditMode = () => {
 }
 
 // Affichage de la modale /////////////////////////////////////////
-export const showModal = async () => {
+export async function showModal() {
     LAYER.style.display = "block";
     MODAL_WINDOW.style.display = "flex";
     MODAL_GALLERY.style.display = "grid";
@@ -79,9 +79,20 @@ export const showModal = async () => {
 }
 
 // Fermeture de la modale //////////////////////////////////////////
-export const hideModal = () => {
+export async function hideModal() {
     LAYER.style.display = "none";
     MODAL_WINDOW.style.display = "none";
+    MODAL_UPLOAD_FORM.style.display= "none";
+    const confirmButton = document.querySelector("#modal input[type='button']");
+    confirmButton.classList.remove("btn--greyed-out");
+    const uploadedPhoto = document.querySelector(".photo-upload-container img");
+    if (uploadedPhoto) {
+        document.getElementById("add-photo").value = "";
+        uploadedPhoto.remove();
+        document.querySelectorAll(".photo-upload-container > *").forEach(
+            item => item.style.display = "block"
+        );
+    }
 }
 
 // Suppression du token de connexion et redirection //////////////// 
@@ -117,12 +128,13 @@ export async function appendWork(work, gallery) {
 
 // Suppression d'un travail et rafraichissement /////////////////////
 export const deleteWork = async (id) => {
-    await deleteWorkRequest(id);
-    const works = await fetchData(WORKS_URL);
-    displayWorks(works, MODAL_GALLERY);
-    displayWorks(works, MAIN_GALLERY);
+    if (confirm("Confirmer la suppression ?")) {
+        await deleteWorkRequest(id);
+        const works = await fetchData(WORKS_URL);
+        displayWorks(works, MODAL_GALLERY);
+        displayWorks(works, MAIN_GALLERY);
+    }
 } 
-
 
 // Rafraichissement de la gallerie et affichage des travaux /////////
 export function displayWorks(works, gallery) {
