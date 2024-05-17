@@ -17,7 +17,7 @@ export const TRASH_ICON = document.querySelectorAll(".fa-trash-can");
 export const CONFIRM_BUTTON = document.querySelector("#modal input[type='button']");
 export const ADD_PHOTO_FIELD = document.getElementById("add-photo");
 export const TITLE_FIELD = document.getElementById("title")
-export const CATERGORY_FIELD = document.getElementById("categories-dropdown")
+export const CATEGORY_FIELD = document.getElementById("categories-dropdown")
 export const GO_BACK_BUTTON = document.getElementsByClassName("fa-arrow-left")[0];
 
 
