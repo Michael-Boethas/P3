@@ -62,7 +62,11 @@ const handleModal = async () => {
             document.querySelectorAll(".photo-upload-container > *").forEach(
                 item => item.style.display = "block"
             );
-            document.querySelector(".photo-upload-container img").remove();
+            const uploadedPhoto = document.querySelector(".photo-upload-container img");
+            if (uploadedPhoto) {
+                uploadedPhoto.remove();
+                document.getElementById("add-photo").value = "";
+            }
         });
     })
 }

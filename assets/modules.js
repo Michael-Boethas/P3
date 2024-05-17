@@ -1,5 +1,6 @@
 import { WORKS_URL, CATEGORIES_URL, FILTERS, MAIN_GALLERY,
-     LAYER, MODAL_WINDOW, MODAL_GALLERY } from "./constants.js";
+     LAYER, MODAL_WINDOW, MODAL_GALLERY, 
+     MODAL_UPLOAD_FORM} from "./constants.js";
 
 // // Réception des données via l'API ////////////////////////////////
 // export async function fetchData(dataUrl) {
@@ -82,6 +83,21 @@ export const showModal = async () => {
 export const hideModal = () => {
     LAYER.style.display = "none";
     MODAL_WINDOW.style.display = "none";
+    MODAL_UPLOAD_FORM.style.display= "none";
+    const confirmButton = document.querySelector("#modal input[type='button']");
+    confirmButton.classList.remove("btn--greyed-out");
+    const uploadedPhoto = document.querySelector(".photo-upload-container img");
+    if (uploadedPhoto) {
+        console.log("yo1 " + document.getElementById("add-photo").value)
+        document.getElementById("add-photo").value = "";
+        console.log("yo2 " + uploadedPhoto);
+        uploadedPhoto.remove();
+        console.log("yo3 " + uploadedPhoto);
+        console.log("yo4 " + document.getElementById("add-photo").value)
+        document.querySelectorAll(".photo-upload-container > *").forEach(
+            item => item.style.display = "block"
+        );
+    }
 }
 
 // Suppression du token de connexion et redirection //////////////// 
@@ -117,10 +133,12 @@ export async function appendWork(work, gallery) {
 
 // Suppression d'un travail et rafraichissement /////////////////////
 export const deleteWork = async (id) => {
-    await deleteWorkRequest(id);
-    const works = await fetchData(WORKS_URL);
-    displayWorks(works, MODAL_GALLERY);
-    displayWorks(works, MAIN_GALLERY);
+    if (confirm("Confirmer la suppression ?")) {
+        await deleteWorkRequest(id);
+        const works = await fetchData(WORKS_URL);
+        displayWorks(works, MODAL_GALLERY);
+        displayWorks(works, MAIN_GALLERY);
+    }
 } 
 
 
