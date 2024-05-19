@@ -2,15 +2,38 @@ import * as modules from "./modules.js"
 import { MODAL_GALLERY, MODAL_UPLOAD_FORM, CONFIRM_BUTTON,
          ADD_PHOTO_FIELD, TITLE_FIELD, CATEGORY_FIELD, GO_BACK_BUTTON,
          WORKS_URL, TOKEN_NAME, USER_ID, 
-         CATEGORIES_URL} from "./constants.js"
+         CATEGORIES_URL, REGEX} from "./constants.js"
 
+
+function isImageValid(selectedPhoto) {
+    if ((selectedPhoto.type !== "image/jpeg" &&
+         selectedPhoto.type !== "image/png" &&
+         selectedPhoto.value !== "") ||
+         selectedPhoto.size > 4194304) {
+            return false;
+    } else {
+        return true;
+    }
+}
+
+function isStringValid(string) {
+    return !REGEX.test(string);
+}
 
 function checkInputFields() {
-    const titleField = document.getElementById("title");
-    const categoryField = document.getElementById("categories-dropdown");
+
+    if (!isStringValid(TITLE_FIELD.value)) {
+        window.alert("Les caractères suivants ne sont pas autorisés: [!@#$%^*()+=}{[\\]|;/><~]");
+    }
+
     return (ADD_PHOTO_FIELD.value !== "" &&
-            titleField.value !== "" &&
-            categoryField.value !== "no-selection");
+                TITLE_FIELD.value !== "" &&
+                CATEGORY_FIELD.value !== "no-selection");
+    // } catch(error) {
+    //     window.alert("Format invalide !!");
+    //     console.log(error);
+    //     return false;
+    // }
 }
 
 function toggleGreyedOut() {
@@ -23,10 +46,14 @@ function toggleFormSubmit() {
     CATEGORY_FIELD.addEventListener("change", toggleGreyedOut);
     // CONFIRM_BUTTON.removeEventListener("click", () => {});
     CONFIRM_BUTTON.addEventListener("click", async (event) => {
-        // event.preventDefault();
+        event.preventDefault();
+        // if (!checkInputFields()) {
+        //     window.alert("")
+        //     return;
+        // }
         const token = sessionStorage.getItem(TOKEN_NAME);
         const userId = sessionStorage.getItem(USER_ID);
-        const formData = new FormData();
+        const formData = new FormData();        // Format attendu pour l'ajout de travaux
         formData.append("title", TITLE_FIELD.value);
         formData.append("category", CATEGORY_FIELD.value);
         formData.append("image", ADD_PHOTO_FIELD.files[0]); 
@@ -46,12 +73,11 @@ function pickPhoto() {
         document.querySelectorAll(".photo-upload-container > *").forEach(
             item => item.style.display = "none"
         );
-        const photo = document.createElement("img");
-        const file = ADD_PHOTO_FIELD.files[0];
-        const imageURL = URL.createObjectURL(file);     // Récupérer l'URL de la photo
-        photo.src = imageURL;
+        const imagePreview = document.createElement("img");
+        const imageURL = URL.createObjectURL(ADD_PHOTO_FIELD.files[0]);   // Récupérer l'URL de la photo
+        imagePreview.src = imageURL;
         document.querySelector(".photo-upload-container")
-                .appendChild(photo);
+                .appendChild(imagePreview);
     }
 }
 
@@ -85,9 +111,9 @@ function showModalGallery() {
     document.querySelectorAll(".photo-upload-container > *").forEach(
         item => item.style.display = "block"
     );
-    const uploadedPhoto = document.querySelector(".photo-upload-container img");
-    if (uploadedPhoto) {
-        uploadedPhoto.remove();
+    const imagePreview = document.querySelector(".photo-upload-container img");
+    if (imagePreview) {
+        imagePreview.remove();
         document.getElementById("add-photo").value = "";
     }
 }

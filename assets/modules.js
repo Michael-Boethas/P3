@@ -3,22 +3,17 @@ import { WORKS_URL, CATEGORIES_URL, FILTERS, MAIN_GALLERY,
      MODAL_UPLOAD_FORM, CONFIRM_BUTTON,
      TOKEN_NAME, USER_ID} from "./constants.js";
 
-// // Réception des données via l'API ////////////////////////////////
-// export async function fetchData(dataUrl) {
-//     const data = await fetch(dataUrl)
-//                 .then(data => data.json())
-//                 .catch(err => {
-//                     showModal();
-//                     console.log(err)
-//                 });
-//     return data;
-// }
-
-// Réception des données via l'API ///////////////////////////////
+// Réception des données via l'API ////////////////////////////////
 export async function fetchData(dataUrl) {
-    const response = await fetch(dataUrl);
-    return await response.json();
+    const data = await fetch(dataUrl)
+                .then(data => data.json())
+                .catch(err => {
+                    window.alert("Erreur lors de la réception de données depuis le serveur");
+                    console.log(err)
+                });
+    return data;
 }
+
 
 // Envoi des données à l'API //////////////////////////////////////
 export async function sendData(url, headersJson, bodyJson) {
@@ -26,8 +21,13 @@ export async function sendData(url, headersJson, bodyJson) {
         method: 'POST',
         headers: headersJson,
         body: JSON.stringify(bodyJson)
+    })
+    .then(response => response.json())
+    .catch(err => {
+        window.alert("Erreur lors de l'envoi de données au serveur");
+        console.log(err)
     });
-    return await response.json();
+    return response;
 }
 
 // Suppression d'un travail sur la base de données /////////////////
@@ -41,6 +41,10 @@ export async function deleteWorkRequest(id) {
           'Authorization': `Bearer ${token}`,
           'User-Id': userId
       }
+    })
+    .catch(err => {
+        window.alert("Erreur de communication avec le serveur");
+        console.log(err)
     });
 }
 

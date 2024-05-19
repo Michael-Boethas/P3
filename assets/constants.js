@@ -24,3 +24,4 @@ export const GO_BACK_BUTTON = document.getElementsByClassName("fa-arrow-left")[0
 // Autre
 export const TOKEN_NAME = "token"
 export const USER_ID = "userId"
+export const REGEX = /[!@#$%^*()+=}{[\]|\;/><~]/g;
