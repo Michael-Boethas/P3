@@ -5,6 +5,7 @@ import { MODAL_GALLERY, MODAL_UPLOAD_FORM, CONFIRM_BUTTON,
          CATEGORIES_URL, REGEX} from "./constants.js"
 
 
+// Vérification de la validité du fichier selectionné //////////////////////////
 function isImageValid(selectedPhoto) {
     if ((selectedPhoto.type !== "image/jpeg" &&
          selectedPhoto.type !== "image/png" &&
@@ -16,10 +17,12 @@ function isImageValid(selectedPhoto) {
     }
 }
 
+// Vérification du contenu de la chaine de caractères /////////////////////////
 function isStringValid(string) {
     return !REGEX.test(string);
 }
 
+// Vérification de la validité du formulaire //////////////////////////////////
 function checkInputFields() {
 
     if (!isStringValid(TITLE_FIELD.value)) {
@@ -36,10 +39,12 @@ function checkInputFields() {
     // }
 }
 
+// Changement de la couleur du bouton de Validation ////////////////////////////
 function toggleGreyedOut() {
     CONFIRM_BUTTON.classList.toggle("btn--greyed-out", !checkInputFields());
 }
 
+// Gestion de la validité du formulaire ///////////////////////////////////////
 function toggleFormSubmit() {
     ADD_PHOTO_FIELD.addEventListener("input", toggleGreyedOut);
     TITLE_FIELD.addEventListener("input", toggleGreyedOut);
@@ -81,7 +86,7 @@ function pickPhoto() {
     }
 }
 
-
+// Affichage du formulaire de la modale /////////////////////////////////
 async function showModalUploadForm() {
     MODAL_GALLERY.style.display = "none";
     MODAL_UPLOAD_FORM.style.display = "flex";
@@ -101,6 +106,7 @@ async function showModalUploadForm() {
     toggleFormSubmit();
 }
 
+// Affichage de la galerie de suppression des travaux /////////////////////
 function showModalGallery() {
     MODAL_UPLOAD_FORM.style.display = "none";
     GO_BACK_BUTTON.style.display = "none";
@@ -118,6 +124,7 @@ function showModalGallery() {
     }
 }
 
+// Gestion de la modale ///////////////////////////////////////////////////
 async function handleModal() {
     const addPhotoButton = document.querySelector("input[value='Ajouter une photo']");
     addPhotoButton.addEventListener("click", () => {
