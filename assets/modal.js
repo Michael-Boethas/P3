@@ -2,7 +2,8 @@ import * as modules from "./modules.js"
 import { MODAL_GALLERY, MODAL_UPLOAD_FORM, CONFIRM_BUTTON,
          ADD_PHOTO_FIELD, TITLE_FIELD, CATEGORY_FIELD, GO_BACK_BUTTON,
          WORKS_URL, TOKEN_NAME, USER_ID, 
-         CATEGORIES_URL, REGEX} from "./constants.js"
+         CATEGORIES_URL, REGEX,ADD_PHOTO_BUTTON,
+         MODAL_HEADING} from "./constants.js"
 
 
 
@@ -141,10 +142,16 @@ function toggleGreyedOut() {
 
 
 // Affichage du formulaire de la modale /////////////////////////////////
-async function showModalUploadForm() {
+async function setModalUploadForm() {
+
     MODAL_GALLERY.style.display = "none";
     MODAL_UPLOAD_FORM.style.display = "flex";
-    CONFIRM_BUTTON.value = "Valider";
+    MODAL_HEADING.textContent = "Ajout photo";
+
+    ADD_PHOTO_BUTTON.style.display = "none";
+    CONFIRM_BUTTON.style.display = "block";
+
+
     CONFIRM_BUTTON.classList.add("btn--greyed-out");
     ADD_PHOTO_FIELD.removeEventListener("input", pickPhoto);
     ADD_PHOTO_FIELD.addEventListener("input", pickPhoto);
@@ -166,18 +173,20 @@ async function showModalUploadForm() {
     CATEGORY_FIELD.addEventListener("change", toggleGreyedOut);
     if (checkInputFields()) {
         console.log("check Input Fields Is True");
-        toggleFormSubmit();
+        // toggleFormSubmit();
     }
 }
 
 
 // Affichage de la galerie de suppression des travaux /////////////////////
-function showModalGallery() {
+function setModalGallery() {
+    console.log("setModalGallery called")
+    MODAL_HEADING.textContent = "Galerie photo";
     MODAL_UPLOAD_FORM.style.display = "none";
     GO_BACK_BUTTON.style.display = "none";
     MODAL_GALLERY.style.display = "grid";
-    CONFIRM_BUTTON.value = "Ajouter une photo";
-    CONFIRM_BUTTON.classList.remove("btn--greyed-out");
+    CONFIRM_BUTTON.style.display = "none";
+    ADD_PHOTO_BUTTON.style.display = "block";
 
     document.querySelectorAll(".photo-upload-container > *").forEach(
         item => item.style.display = "block"
@@ -191,16 +200,14 @@ function showModalGallery() {
 
 // Gestion de la modale ///////////////////////////////////////////////////
 async function handleModal() {
-    const addPhotoButton = document.querySelector("input[value='Ajouter une photo']");
-    addPhotoButton.addEventListener("click", () => {
-        document.querySelector("#modal h2").textContent = "Ajout photo";
-        
-        showModalUploadForm();
+    ADD_PHOTO_BUTTON.addEventListener("click", () => {
+        setModalUploadForm();
         
         GO_BACK_BUTTON.style.display = "block";
-        GO_BACK_BUTTON.addEventListener("click", showModalGallery);
+        GO_BACK_BUTTON.addEventListener("click", setModalGallery);
     })
 }
+
 await handleModal();
 
 

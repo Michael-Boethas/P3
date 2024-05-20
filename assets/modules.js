@@ -1,7 +1,8 @@
 import { WORKS_URL, CATEGORIES_URL, FILTERS, MAIN_GALLERY,
      LAYER, MODAL_WINDOW, MODAL_GALLERY, 
      MODAL_UPLOAD_FORM, CONFIRM_BUTTON,
-     TOKEN_NAME, USER_ID} from "./constants.js";
+     TOKEN_NAME, USER_ID,
+     ADD_PHOTO_BUTTON} from "./constants.js";
 
 // Réception des données via l'API ////////////////////////////////
 export async function fetchData(dataUrl) {
@@ -78,6 +79,7 @@ export async function showModal() {
     LAYER.style.display = "block";
     MODAL_WINDOW.style.display = "flex";
     MODAL_GALLERY.style.display = "grid";
+    ADD_PHOTO_BUTTON.value = "Ajouter photo"
     document.querySelector("#modal h2").textContent = "Galerie photo";
     const works = await fetchData(WORKS_URL);
     displayWorks(works, MODAL_GALLERY);

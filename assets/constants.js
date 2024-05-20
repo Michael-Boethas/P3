@@ -11,10 +11,12 @@ export const LAYER = document.getElementById("layer");
 export const LOGIN_SUBMIT_BUTTON = document.querySelector('input[value="Connexion"]');
 
 export const MODAL_WINDOW = document.getElementById("modal");
+export const MODAL_HEADING = document.querySelector("#modal h2");
 export const MODAL_GALLERY = document.getElementById("modal-gallery");
 export const MODAL_UPLOAD_FORM = document.getElementById("modal-upload-form");
 export const TRASH_ICON = document.querySelectorAll(".fa-trash-can");
-export const CONFIRM_BUTTON = document.querySelector("#modal input[type='button']");
+export const ADD_PHOTO_BUTTON = document.getElementById("modal-gallery__btn");
+export const CONFIRM_BUTTON = document.getElementById("modal-upload-form__btn");
 export const ADD_PHOTO_FIELD = document.getElementById("add-photo");
 export const TITLE_FIELD = document.getElementById("title")
 export const CATEGORY_FIELD = document.getElementById("categories-dropdown")

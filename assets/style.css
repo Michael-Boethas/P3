@@ -155,6 +155,10 @@ body {
 	cursor: pointer;
 }
 
+#modal-upload-form__btn {
+	display: none;
+}
+
 #modal-upload-form {
 	display: none;
 	flex-flow: column;
