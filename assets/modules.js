@@ -1,3 +1,4 @@
+import { showModal, hideModal } from "./modal.js";
 import { WORKS_URL, CATEGORIES_URL, FILTERS, MAIN_GALLERY,
      LAYER, MODAL_WINDOW, MODAL_GALLERY, 
      MODAL_UPLOAD_FORM, CONFIRM_BUTTON,
@@ -74,33 +75,32 @@ export async function setEditMode(){
     }
 }
 
-// Affichage de la modale /////////////////////////////////////////
-export async function showModal() {
-    LAYER.style.display = "block";
-    MODAL_WINDOW.style.display = "flex";
-    MODAL_GALLERY.style.display = "grid";
-    ADD_PHOTO_BUTTON.value = "Ajouter photo"
-    document.querySelector("#modal h2").textContent = "Galerie photo";
-    const works = await fetchData(WORKS_URL);
-    displayWorks(works, MODAL_GALLERY);
-}
+// // Affichage de la modale /////////////////////////////////////////
+// export async function showModal() {
+//     LAYER.style.display = "block";
+//     MODAL_WINDOW.style.display = "flex";
+//     MODAL_GALLERY.style.display = "grid";
+//     document.querySelector("#modal h2").textContent = "Galerie photo";
+//     const works = await fetchData(WORKS_URL);
+//     displayWorks(works, MODAL_GALLERY);
+// }
 
-// Fermeture de la modale //////////////////////////////////////////
-export async function hideModal() {
-    LAYER.style.display = "none";
-    MODAL_WINDOW.style.display = "none";
-    MODAL_UPLOAD_FORM.style.display= "none";
-    CONFIRM_BUTTON.value = "Ajouter une photo";
-    CONFIRM_BUTTON.classList.remove("btn--greyed-out");
-    const uploadedPhoto = document.querySelector(".photo-upload-container img");
-    if (uploadedPhoto) {
-        document.getElementById("add-photo").value = "";
-        uploadedPhoto.remove();
-        document.querySelectorAll(".photo-upload-container > *").forEach(
-            item => item.style.display = "block"
-        );
-    }
-}
+// // Fermeture de la modale //////////////////////////////////////////
+// export async function hideModal() {
+//     LAYER.style.display = "none";
+//     MODAL_WINDOW.style.display = "none";
+//     MODAL_UPLOAD_FORM.style.display= "none";
+//     CONFIRM_BUTTON.value = "Ajouter une photo";
+//     CONFIRM_BUTTON.classList.remove("btn--greyed-out");
+//     const uploadedPhoto = document.querySelector(".photo-upload-container img");
+//     if (uploadedPhoto) {
+//         document.getElementById("add-photo").value = "";
+//         uploadedPhoto.remove();
+//         document.querySelectorAll(".photo-upload-container > *").forEach(
+//             item => item.style.display = "block"
+//         );
+//     }
+// }
 
 // Suppression du token de connexion et redirection //////////////// 
 export const logout = () => {

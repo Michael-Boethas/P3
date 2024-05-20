@@ -1,9 +1,10 @@
 import * as modules from "./modules.js"
-import { MODAL_GALLERY, MODAL_UPLOAD_FORM, CONFIRM_BUTTON,
+import { LAYER, MODAL_WINDOW, MODAL_GALLERY, MODAL_UPLOAD_FORM, CONFIRM_BUTTON,
          ADD_PHOTO_FIELD, TITLE_FIELD, CATEGORY_FIELD, GO_BACK_BUTTON,
          WORKS_URL, TOKEN_NAME, USER_ID, 
          CATEGORIES_URL, REGEX,ADD_PHOTO_BUTTON,
          MODAL_HEADING} from "./constants.js"
+
 
 
 
@@ -141,11 +142,27 @@ function toggleGreyedOut() {
 }
 
 
+// Affichage de la modale /////////////////////////////////////////
+export async function showModal() {
+    LAYER.style.display = "block";
+    MODAL_WINDOW.style.display = "flex";
+    await setModalGallery();
+}
+
+// Fermeture de la modale //////////////////////////////////////////
+export async function hideModal() {
+    LAYER.style.display = "none";
+    MODAL_WINDOW.style.display = "none";
+    await setModalGallery();
+}
+
 // Affichage du formulaire de la modale /////////////////////////////////
 async function setModalUploadForm() {
 
     MODAL_GALLERY.style.display = "none";
     MODAL_UPLOAD_FORM.style.display = "flex";
+    GO_BACK_BUTTON.style.display = "block";
+    GO_BACK_BUTTON.addEventListener("click", setModalGallery);
     MODAL_HEADING.textContent = "Ajout photo";
 
     ADD_PHOTO_BUTTON.style.display = "none";
@@ -179,13 +196,14 @@ async function setModalUploadForm() {
 
 
 // Affichage de la galerie de suppression des travaux /////////////////////
-function setModalGallery() {
+async function setModalGallery() {
     console.log("setModalGallery called")
     MODAL_HEADING.textContent = "Galerie photo";
     MODAL_UPLOAD_FORM.style.display = "none";
     GO_BACK_BUTTON.style.display = "none";
     MODAL_GALLERY.style.display = "grid";
     CONFIRM_BUTTON.style.display = "none";
+    CONFIRM_BUTTON.classList.remove("btn--greyed-out");
     ADD_PHOTO_BUTTON.style.display = "block";
 
     document.querySelectorAll(".photo-upload-container > *").forEach(
@@ -196,15 +214,18 @@ function setModalGallery() {
         imagePreview.remove();
         document.getElementById("add-photo").value = "";
     }
+    const works = await modules.fetchData(WORKS_URL);
+    modules.displayWorks(works, MODAL_GALLERY);
 }
+
 
 // Gestion de la modale ///////////////////////////////////////////////////
 async function handleModal() {
     ADD_PHOTO_BUTTON.addEventListener("click", () => {
         setModalUploadForm();
         
-        GO_BACK_BUTTON.style.display = "block";
-        GO_BACK_BUTTON.addEventListener("click", setModalGallery);
+        // GO_BACK_BUTTON.style.display = "block";
+        // GO_BACK_BUTTON.addEventListener("click", setModalGallery);
     })
 }
 
