@@ -230,6 +230,11 @@ body {
 	z-index: 2;
 }
 
+#add-photo {
+	z-index: 3;
+	opacity: 0;
+}
+
 .photo-upload-container:hover {
 	border: 3px solid #00000020;
 }

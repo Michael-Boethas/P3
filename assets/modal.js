@@ -9,11 +9,11 @@ import { LAYER, MODAL_WINDOW, MODAL_GALLERY, MODAL_UPLOAD_FORM, CONFIRM_BUTTON,
 
 
 // Gestion de la selection de Photo /////////////////////////////////////
-function pickPhoto() {
+function displayImagePreview() {
     if (ADD_PHOTO_FIELD.value !== "") {
-        document.querySelectorAll(".photo-upload-container > *").forEach(
-            item => item.style.display = "none"
-        );
+        document.querySelectorAll(".photo-upload-container > *").forEach(item => {
+            item.id === "add-photo" ? null : item.style.display = "none";     // Ignorer le bouton file input
+            item.nodeName === "IMG" ? item.remove() : null });      // Effacer l'image existante
         const imagePreview = document.createElement("img");
         const imageURL = URL.createObjectURL(ADD_PHOTO_FIELD.files[0]);   // Récupérer l'URL de la photo
         imagePreview.src = imageURL;
@@ -37,14 +37,15 @@ function removeInvalidImage() {
 }
 
 // Vérification de la validité du fichier selectionné //////////////////////////
-function isImageValid(addPhotoField) {
+function imageIsValid(addPhotoField) {
+    console.log("imageIsValid: " + addPhotoField.files[0])
     const selectedPhoto = addPhotoField.files[0];
     if ((selectedPhoto.type !== "image/jpeg" &&
          selectedPhoto.type !== "image/png" &&
          selectedPhoto.value !== "") ||
          selectedPhoto.size > 4194304) {
             window.alert(`"Formats acceptés: 
-                           jpg, png: 4mo max"`);
+                           jpg, png; 4mo max"`);
             removeInvalidImage();
             return false;
     } else {
@@ -53,9 +54,8 @@ function isImageValid(addPhotoField) {
 }
 
 // Vérification du contenu de la chaine de caractères /////////////////////////
-function isStringValid(string) {
+function stringIsValid(string) {
     if (REGEX.test(string)) {
-        // TITLE_FIELD.value = TITLE_FIELD.value.replace(REGEX, '');
         window.alert(`"Les caractères suivants ne sont pas autorisés:
         \`!@#$%^&*()_+={}[]|\\;?/><"`);
         TITLE_FIELD.value = "";
@@ -71,8 +71,9 @@ function isOptionSelected() {
 }
 
 // Vérification de la complétude du formulaire ///////////////////////////////
-function fieldsNotEmpty() {
-    console.log("fields not empty called")
+function formIsFilled() {
+    console.log("formIsFilled called: " + (ADD_PHOTO_FIELD.value !== "" && TITLE_FIELD.value !== "" && CATEGORY_FIELD.value !== "no-selection"))
+
     return (ADD_PHOTO_FIELD.value !== "" &&
             TITLE_FIELD.value !== "" &&
             CATEGORY_FIELD.value !== "no-selection");
@@ -81,22 +82,15 @@ function fieldsNotEmpty() {
 
 // Vérification de la validité du formulaire //////////////////////////////////
 function checkInputFields() {
-    console.log("checkInputfieldsCalled");
-    if (fieldsNotEmpty()) {
-        return isImageValid(ADD_PHOTO_FIELD) &&
-               isStringValid(TITLE_FIELD.value) &&
+
+    if (formIsFilled()) {
+        return imageIsValid(ADD_PHOTO_FIELD) &&
+               stringIsValid(TITLE_FIELD.value) &&
                isOptionSelected();
     }
     else {
         return false;
     }
-    // if (ADD_PHOTO_FIELD.files[0]) {
-    //     isImageValid(ADD_PHOTO_FIELD);
-    // }
-    // if (TITLE_FIELD.value) {
-    //     isStringValid(TITLE_FIELD.value);
-    // }
-    // isOptionSelected();
 }
 
 
@@ -135,12 +129,10 @@ function toggleFormSubmit() {
     CONFIRM_BUTTON.addEventListener("click", submitEventListener); 
 }
 
-
 // Changement de la couleur du bouton de Validation ////////////////////////////
 function toggleGreyedOut() {
-    CONFIRM_BUTTON.classList.toggle("btn--greyed-out", !fieldsNotEmpty());
+    CONFIRM_BUTTON.classList.toggle("btn--greyed-out", !formIsFilled());
 }
-
 
 // Affichage de la modale /////////////////////////////////////////
 export async function showModal() {
@@ -168,10 +160,10 @@ async function setModalUploadForm() {
     ADD_PHOTO_BUTTON.style.display = "none";
     CONFIRM_BUTTON.style.display = "block";
 
-
     CONFIRM_BUTTON.classList.add("btn--greyed-out");
-    ADD_PHOTO_FIELD.removeEventListener("input", pickPhoto);
-    ADD_PHOTO_FIELD.addEventListener("input", pickPhoto);
+    ADD_PHOTO_FIELD.value = "";
+    ADD_PHOTO_FIELD.removeEventListener("input", displayImagePreview);
+    ADD_PHOTO_FIELD.addEventListener("input", displayImagePreview);
     TITLE_FIELD.value = "";
     const categories = await modules.fetchData(CATEGORIES_URL);
     CATEGORY_FIELD.innerHTML = "<option value=no-selection></option>";
@@ -181,17 +173,13 @@ async function setModalUploadForm() {
         option.textContent = category.name;
         CATEGORY_FIELD.appendChild(option);
     });
-    ADD_PHOTO_FIELD.removeEventListener("input", toggleGreyedOut);
-    TITLE_FIELD.removeEventListener("input", toggleGreyedOut);
-    CATEGORY_FIELD.removeEventListener("change", toggleGreyedOut);
 
-    ADD_PHOTO_FIELD.addEventListener("input", toggleGreyedOut);
-    TITLE_FIELD.addEventListener("input", toggleGreyedOut);
-    CATEGORY_FIELD.addEventListener("change", toggleGreyedOut);
-    if (checkInputFields()) {
-        console.log("check Input Fields Is True");
-        // toggleFormSubmit();
-    }
+    CONFIRM_BUTTON.addEventListener("click", checkInputFields)
+    const formFields = [ADD_PHOTO_BUTTON, TITLE_FIELD, CATEGORY_FIELD];
+    formFields.forEach(field => 
+        field.removeEventListener("input", toggleGreyedOut));
+    formFields.forEach(field =>
+        field.addEventListener("input", toggleGreyedOut));
 }
 
 
@@ -220,40 +208,12 @@ async function setModalGallery() {
 
 
 // Gestion de la modale ///////////////////////////////////////////////////
-async function handleModal() {
+// async function handleModal() {
+if (ADD_PHOTO_BUTTON) {
     ADD_PHOTO_BUTTON.addEventListener("click", () => {
         setModalUploadForm();
-        
-        // GO_BACK_BUTTON.style.display = "block";
-        // GO_BACK_BUTTON.addEventListener("click", setModalGallery);
     })
 }
+// }
 
-await handleModal();
-
-
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-////////////////// V 2.0 //////////////////////////////////
-
-
-
-
-
-
-
-
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
+// document.addEventListener("DOMContentLoaded", await handleModal());
