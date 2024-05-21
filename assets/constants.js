@@ -6,11 +6,12 @@ export const USERS_LOGIN_URL = "http://localhost:5678/api/users/login";
 // Éléments du DOM /////////////////////////////////////////////////
 export const FILTERS = document.getElementById("filters");
 export const MAIN_GALLERY = document.getElementById("main-gallery");
-export const LAYER = document.getElementById("layer");
 
 export const LOGIN_SUBMIT_BUTTON = document.querySelector('input[value="Connexion"]');
 
+export const LAYER = document.getElementById("layer");
 export const MODAL_WINDOW = document.getElementById("modal");
+export const MODAL_CLOSE_BUTTON = document.querySelector(".close-button");
 export const MODAL_HEADING = document.querySelector("#modal h2");
 export const MODAL_GALLERY = document.getElementById("modal-gallery");
 export const MODAL_UPLOAD_FORM = document.getElementById("modal-upload-form");
