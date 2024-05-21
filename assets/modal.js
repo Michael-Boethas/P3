@@ -25,7 +25,6 @@ function displayImagePreview() {
 
 // Suppression d'une image invalide ///////////////////////////////////////////
 function removeInvalidImage() {
-    console.log("removeInvalidImage called");
     const imagePreview = document.querySelector(".photo-upload-container img");
     if (imagePreview) {
         imagePreview.remove();
@@ -39,7 +38,6 @@ function removeInvalidImage() {
 
 // Vérification de la validité du fichier selectionné //////////////////////////
 function imageIsValid(addPhotoField) {
-    console.log("imageIsValid: " + addPhotoField.files[0])
     const selectedPhoto = addPhotoField.files[0];
     if ((selectedPhoto.type !== "image/jpeg" &&
          selectedPhoto.type !== "image/png" &&
@@ -69,13 +67,14 @@ function stringIsValid(string) {
 // Verification du champs catégorie ///////////////////////////////////////////
 function optionIsSelected() {
     if (CATEGORY_FIELD.value === "no-selection") {
+        return false;
+    } else {
+        return true;
     }
 }
 
 // Vérification de la complétude du formulaire ///////////////////////////////
 function formIsFilled() {
-    console.log("formIsFilled called: " + (ADD_PHOTO_FIELD.value !== "" && TITLE_FIELD.value !== "" && CATEGORY_FIELD.value !== "no-selection"))
-
     return (ADD_PHOTO_FIELD.value !== "" &&
             TITLE_FIELD.value !== "" &&
             CATEGORY_FIELD.value !== "no-selection");
@@ -83,7 +82,6 @@ function formIsFilled() {
 
 // Vérification de la validité du formulaire //////////////////////////////////
 function checkInputFields() {
-    console.log("checkInputFields called")
     if (formIsFilled()) {
         return imageIsValid(ADD_PHOTO_FIELD) &&
                stringIsValid(TITLE_FIELD.value) &&
@@ -98,44 +96,41 @@ function checkInputFields() {
 async function uploadWork() {
     try {
         const token = sessionStorage.getItem(TOKEN_NAME);
-        const userId = sessionStorage.getItem(USER_ID);
-        const formData = new FormData();        
+        const formData = new FormData();
+        formData.append("image", ADD_PHOTO_FIELD.files[0]);
         formData.append("title", TITLE_FIELD.value);
-        formData.append("category", CATEGORY_FIELD.value);
-        formData.append("image", ADD_PHOTO_FIELD.files[0]); 
-        const headers = {
-            "accept": "application/json",
-            "Authorization": `Bearer ${token}`,
-            "User-Id": userId
-        };
-        await modules.sendData(WORKS_URL, headers, formData);
-        window.alert("Ajout validé");
-    } catch (error) {
-        window.alert("Erreur lors de la publication");
-        console.error("Error uploading work:", error);
+        formData.append("category", CATEGORY_FIELD.value.slice(-1)); // option-n
+        await fetch(WORKS_URL, {
+          method: "POST",
+          body: formData,
+          headers: 
+          {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          }});
+      } catch (error) {
+        console.log(error);
     }
 }
 
+
 // Gestion du bouton d'envoi des données /////////////////////////////////////
 async function submitButton(event) {
-    console.log("submitButton called");
     event.preventDefault();
-    // if(checkInputFields()){
+    if(checkInputFields()){
         uploadWork()
             .then(window.location.href = "./index.html")
-                .catch(err => console.log("uploadWork error: " + err))
+                .catch(err => console.log(err));
         // modules.displayWorks(await modules.fetchData(WORKS_URL), MAIN_GALLERY);
         // window.location.href = "./index.html";
-    // }
+    }
 };
 
 // Gestion de la validité du formulaire ///////////////////////////////////////
 function toggleFormSubmit() {
-    console.log("toggleFormSubmit called");
-    // CONFIRM_BUTTON.removeEventListener("click", submitButton); // pour éviter l'ajout multiple d'eventListeners
-    if (checkInputFields()) {
-        console.log(checkInputFields())
-        CONFIRM_BUTTON.addEventListener("click", submitButton, {once: true});
+    CONFIRM_BUTTON.removeEventListener("click", submitButton); // pour éviter l'ajout multiple d'eventListeners
+    if (formIsFilled()) {
+        CONFIRM_BUTTON.addEventListener("click", submitButton);
     }
 }
 
@@ -179,7 +174,7 @@ async function setModalUploadForm() {
     CATEGORY_FIELD.innerHTML = "<option value=no-selection></option>";  // Rafraichissement des catégories
     categories.forEach(category => {
         const option = document.createElement("option");
-        option.value = "option" + category.id;
+        option.value = "option-" + category.id;
         option.textContent = category.name;
         CATEGORY_FIELD.appendChild(option);
     });
@@ -188,17 +183,16 @@ async function setModalUploadForm() {
     formFields.forEach(field => 
         field.removeEventListener("input", toggleGreyedOut));
     formFields.forEach(field =>
-        field.addEventListener("input", toggleGreyedOut, {once: true}));
+        field.addEventListener("input", toggleGreyedOut));
     formFields.forEach(field =>
         field.removeEventListener("change", toggleFormSubmit));
     formFields.forEach(field =>
-        field.addEventListener("change", toggleFormSubmit, {once: true}));
+        field.addEventListener("change", toggleFormSubmit));
 }
 
 
 // Affichage de la galerie de suppression des travaux /////////////////////
 async function setModalGallery() {
-    console.log("setModalGallery called")
     MODAL_HEADING.textContent = "Galerie photo";
     MODAL_UPLOAD_FORM.style.display = "none";
     GO_BACK_BUTTON.style.display = "none";

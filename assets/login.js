@@ -9,11 +9,11 @@ const handleLoginButton = async (event) => {
     const passwordField = document.getElementById("password");
     const loginData = await modules.sendData(USERS_LOGIN_URL,
         {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json"
         },
         {
-            email: emailField.value,
-            password: passwordField.value
+            "email": emailField.value,
+            "password": passwordField.value
         });
 
     if (loginData.token) {
@@ -21,6 +21,7 @@ const handleLoginButton = async (event) => {
         sessionStorage.setItem(TOKEN_NAME, loginData.token);
         window.location.href = "./index.html";
     } else {
+        passwordField.value = "";
         const existingErrorMessage = document.querySelector(".error-message");
 
         if (!existingErrorMessage) {
