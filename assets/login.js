@@ -14,7 +14,16 @@ const handleLoginButton = async (event) => {
         {
             "email": emailField.value,
             "password": passwordField.value
-        });
+        }).catch(err => {
+            Swal.fire({
+                icon: "warning",
+                text: `Erreur lors de la réception de données
+                       depuis le serveur`,
+                showCloseButton: true,
+                showConfirmButton: false
+            })
+            console.log(err);
+        })
 
     if (loginData.token) {
         sessionStorage.setItem(USER_ID, loginData.userId);
@@ -28,7 +37,7 @@ const handleLoginButton = async (event) => {
             const errorMessage = document.createElement("span");
             errorMessage.classList.add("error-message");
             errorMessage.textContent = "La combinaison adresse email / mot de passe est incorrecte";
-            LOGIN_SUBMIT_BUTTON.insertAdjacentElement('afterend', errorMessage);
+            LOGIN_SUBMIT_BUTTON.insertAdjacentElement("afterend", errorMessage);
         } else {
             existingErrorMessage.style.animation = "jiggle 500ms";
             setTimeout(() => { existingErrorMessage.style.animation = ""; }, 500);

@@ -7,7 +7,7 @@ export const USERS_LOGIN_URL = "http://localhost:5678/api/users/login";
 export const FILTERS = document.getElementById("filters");
 export const MAIN_GALLERY = document.getElementById("main-gallery");
 
-export const LOGIN_SUBMIT_BUTTON = document.querySelector('input[value="Connexion"]');
+export const LOGIN_SUBMIT_BUTTON = document.querySelector(`input[value="Connexion"]`);
 
 export const LAYER = document.getElementById("layer");
 export const MODAL_WINDOW = document.getElementById("modal");

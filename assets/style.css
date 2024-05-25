@@ -505,3 +505,38 @@ footer nav ul {
 	75% { transform: translateX(5px); }
 	100% { transform: translateX(0); }
   }
+
+
+
+/****************** SweetAlert2 CSS *************************/
+
+.swal2-popup {
+	font-size: 20px;
+	width: auto;
+	max-width: 500px;
+}
+
+.swal2-icon {
+	font-size: 10px;
+}
+
+.swal2-confirm.swal2-styled {
+	background-color: #1D6154;
+	font-size: 18px;
+}
+
+.swal2-close, .swal2-close:hover {
+	color: #00000080;
+	font-size: 30px;
+}
+
+.swal2-confirm.swal2-styled:focus, 
+.swal2-cancel.swal2-styled:focus,
+.swal2-close:focus {
+	box-shadow: none;
+} 
+
+.swal2-cancel.swal2-styled {
+	background-color: #A7A7A7;
+	font-size: 18px;
+}

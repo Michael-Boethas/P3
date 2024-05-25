@@ -1,7 +1,7 @@
 import * as modules from "./modules.js"
 import { LAYER, MODAL_WINDOW, MODAL_GALLERY, MODAL_UPLOAD_FORM, CONFIRM_BUTTON,
          ADD_PHOTO_FIELD, TITLE_FIELD, CATEGORY_FIELD, GO_BACK_BUTTON,
-         WORKS_URL, TOKEN_NAME, USER_ID, 
+         WORKS_URL, TOKEN_NAME, 
          CATEGORIES_URL, REGEX,ADD_PHOTO_BUTTON,
          MODAL_HEADING, MAIN_GALLERY} from "./constants.js"
 
@@ -43,7 +43,12 @@ function imageIsValid(addPhotoField) {
          selectedPhoto.type !== "image/png" &&
          selectedPhoto.value !== "") ||
          selectedPhoto.size > 4194304) {
-            window.alert("Formats acceptés:  jpg, png; 4mo max");
+            Swal.fire({
+                icon: "warning",
+                text: `Formats acceptés:  jpg, png; 4mo max`,
+                showCloseButton: true,
+                showConfirmButton: false
+            })
             removeInvalidImage();
             toggleGreyedOut();
             // setModalUploadForm();
@@ -56,12 +61,18 @@ function imageIsValid(addPhotoField) {
 // Vérification du contenu de la chaine de caractères /////////////////////////
 function stringIsValid(string) {
     if (REGEX.test(string)) {
-        window.alert(`Les caractères suivants ne sont pas autorisés:
-        \` ! @ # $ % ^ & * ( ) _ + = { } [ ] | \\ ; ? / > <`);
+        Swal.fire({
+            icon: "warning",
+            text: `Les caractères suivants ne sont pas autorisés:
+            \`!@#$%^&*()_+={}[]|\\;?/><`,
+            showCloseButton: true,
+            showConfirmButton: false
+        })
         TITLE_FIELD.value = "";
         toggleGreyedOut();
+    } else {
+        return !REGEX.test(string);
     }
-    return !REGEX.test(string);
 }
 
 // Verification du champs catégorie ///////////////////////////////////////////
@@ -117,14 +128,30 @@ async function uploadWork() {
 // Gestion du bouton d'envoi des données /////////////////////////////////////
 async function submitButton(event) {
     event.preventDefault();
-    if(checkInputFields()){
-        uploadWork()
-            .then(window.location.href = "./index.html")
-                .catch(err => console.log(err));
-        // modules.displayWorks(await modules.fetchData(WORKS_URL), MAIN_GALLERY);
-        // window.location.href = "./index.html";
+    if (checkInputFields()) {
+        Swal.fire({
+            text: "Confirmer l'ajout ?",
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            cancelButtonText: "No"
+        }).then(async (result) => { 
+            if (result.isConfirmed) {
+                try {
+                    await uploadWork();
+                    Swal.fire({
+                        icon: "success",
+                        text: `L'ajout a bien été pris en compte"`,
+                        showCloseButton: true,
+                        showConfirmButton: false
+                    })
+                    setModalGallery();
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+        })
     }
-};
+}
 
 // Gestion de la validité du formulaire ///////////////////////////////////////
 function toggleFormSubmit() {
@@ -154,7 +181,7 @@ export async function hideModal() {
     MODAL_WINDOW.style.display = "none";
 }
 
-// Affichage du formulaire de la modale //////////////////////////////////////
+// Mise en place du formulaire de la modale //////////////////////////////////////
 async function setModalUploadForm() {
 
     MODAL_GALLERY.style.display = "none";
@@ -185,9 +212,9 @@ async function setModalUploadForm() {
     formFields.forEach(field =>
         field.addEventListener("input", toggleGreyedOut));
     formFields.forEach(field =>
-        field.removeEventListener("change", toggleFormSubmit));
+        field.removeEventListener("input", toggleFormSubmit));
     formFields.forEach(field =>
-        field.addEventListener("change", toggleFormSubmit));
+        field.addEventListener("input", toggleFormSubmit));
 }
 
 
@@ -217,12 +244,11 @@ async function setModalGallery() {
 
 
 // Gestion de la modale ///////////////////////////////////////////////////
-// async function handleModal() {
-if (ADD_PHOTO_BUTTON) {
-    ADD_PHOTO_BUTTON.addEventListener("click", () => {
-        setModalUploadForm();
-    })
+async function handleModal() {
+    if (ADD_PHOTO_BUTTON) {
+        ADD_PHOTO_BUTTON.addEventListener("click", () => {
+            setModalUploadForm();
+        })
+    }
 }
-// }
-
-// document.addEventListener("DOMContentLoaded", await handleModal());
+await handleModal();

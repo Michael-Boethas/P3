@@ -7,7 +7,13 @@ export async function fetchData(dataUrl) {
     const data = await fetch(dataUrl)
                 .then(data => data.json())
                 .catch(err => {
-                    window.alert("Erreur lors de la réception de données depuis le serveur");
+                    Swal.fire({
+                        icon: "warning",
+                        text: `Erreur lors de la réception de données
+                               depuis le serveur`,
+                        showCloseButton: true,
+                        showConfirmButton: false
+                    })
                     console.log(err)
                 });
     return data;
@@ -17,13 +23,19 @@ export async function fetchData(dataUrl) {
 // Envoi des données à l'API //////////////////////////////////////
 export async function sendData(url, headersJson, bodyJson) {
     const response = await fetch(url, {
-        method: 'POST',
+        method: "POST",
         headers: headersJson,
         body: JSON.stringify(bodyJson)
     })
     .then(response => response.json())
     .catch(err => {
-        window.alert("Erreur lors de l'envoi de données au serveur");
+        Swal.fire({
+            icon: "warning",
+            text: `Erreur lors de l'envoi de données
+                   au serveur`,
+            showCloseButton: true,
+            showConfirmButton: false
+        })
         console.log(err)
     });
     return response;
@@ -34,15 +46,20 @@ export async function deleteWorkRequest(id) {
     const token = sessionStorage.getItem(TOKEN_NAME);
     const userId = sessionStorage.getItem(USER_ID);
     await fetch(`${WORKS_URL}/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          'accept': '*/*',
-          'Authorization': `Bearer ${token}`,
-          'User-Id': userId
+          "accept": "*/*",
+          "Authorization": `Bearer ${token}`,
+          "User-Id": userId
       }
     })
     .catch(err => {
-        window.alert("Erreur de communication avec le serveur");
+        Swal.fire({
+            icon: "warning",
+            text: `Erreur de communication avec le serveur`,
+            showCloseButton: true,
+            showConfirmButton: false
+        })
         console.log(err)
     });
 }
@@ -77,6 +94,7 @@ export async function setEditMode(){
 // Suppression du token de connexion et redirection //////////////// 
 export const logout = () => {
     sessionStorage.removeItem(TOKEN_NAME);
+    sessionStorage.removeItem(USER_ID);
     window.location.href = "./index.html";
 }
 
@@ -107,13 +125,20 @@ export async function appendWork(work, gallery) {
 
 // Suppression d'un travail et rafraichissement /////////////////////
 export const deleteWork = async (id) => {
-    if (confirm("Confirmer la suppression ?")) {
-        await deleteWorkRequest(id);
-        const works = await fetchData(WORKS_URL);
-        displayWorks(works, MODAL_GALLERY);
-        displayWorks(works, MAIN_GALLERY);
-    }
-} 
+    Swal.fire({
+        text: "Confirmer la suppression ?",
+        showCancelButton: true,
+        confirmButtonText: "Yes",
+        cancelButtonText: "No"
+    }).then(async (result) => { 
+        if (result.isConfirmed) {
+            await deleteWorkRequest(id);
+            const works = await fetchData(WORKS_URL);
+            displayWorks(works, MODAL_GALLERY);
+            displayWorks(works, MAIN_GALLERY);
+        }
+    });
+}
 
 // Rafraichissement de la gallerie et affichage des travaux /////////
 export function displayWorks(works, gallery) {
