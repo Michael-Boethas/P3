@@ -1,34 +1,33 @@
 import * as modules from "./modules.js"
-import { LAYER, MODAL_WINDOW, MODAL_GALLERY, MODAL_UPLOAD_FORM, CONFIRM_BUTTON,
+import { LAYER, MODAL_WINDOW, MODAL_GALLERY, MODAL_UPLOAD_FORM, MODAL_SUBMIT_BUTTON,
          ADD_PHOTO_FIELD, TITLE_FIELD, CATEGORY_FIELD, GO_BACK_BUTTON,
-         WORKS_URL, TOKEN_NAME, 
-         CATEGORIES_URL, REGEX,ADD_PHOTO_BUTTON,
+         WORKS_URL, TOKEN_NAME, CATEGORIES_URL, REGEX,ADD_PHOTO_BUTTON,
          MODAL_HEADING, MAIN_GALLERY} from "./constants.js"
+
 
 
 
 
 // Gestion de la selection de Photo /////////////////////////////////////
 function displayImagePreview() {
-    if (ADD_PHOTO_FIELD.value !== "") {
+    if (ADD_PHOTO_FIELD.value !== "") { 
         document.querySelectorAll(".photo-upload-container > *").forEach(item => {
             item.id === "add-photo" ? null : item.style.display = "none";     // Ignorer le bouton file input
-            item.nodeName === "IMG" ? item.remove() : null });      // Effacer l'image existante
+            item.nodeName === "IMG" ? item.remove() : null;                 // Suppression de l'image existante
+         });
         const imagePreview = document.createElement("img");
-        const imageURL = URL.createObjectURL(ADD_PHOTO_FIELD.files[0]);   // Récupérer l'URL de la photo
+        const imageURL = URL.createObjectURL(ADD_PHOTO_FIELD.files[0]);      // Acquisition de l'URL de la photo
         imagePreview.src = imageURL;
         document.querySelector(".photo-upload-container")
                 .appendChild(imagePreview);
-        toggleGreyedOut();
     }
 }
 
 // Suppression d'une image invalide ///////////////////////////////////////////
-function removeInvalidImage() {
+function removeImage() {
     const imagePreview = document.querySelector(".photo-upload-container img");
     if (imagePreview) {
         imagePreview.remove();
-        toggleGreyedOut();
     }
     document.querySelectorAll(".photo-upload-container > *").forEach(
         item => item.style.display = "block"
@@ -45,13 +44,13 @@ function imageIsValid(addPhotoField) {
          selectedPhoto.size > 4194304) {
             Swal.fire({
                 icon: "warning",
-                text: `Formats acceptés:  jpg, png; 4mo max`,
+                text: `Formats acceptés:  jpg, png. 4mo max`,
                 showCloseButton: true,
                 showConfirmButton: false
             })
-            removeInvalidImage();
+            removeImage();
             toggleGreyedOut();
-            // setModalUploadForm();
+            toggleFormSubmit();
             return false;
     } else {
         return true;
@@ -70,6 +69,7 @@ function stringIsValid(string) {
         })
         TITLE_FIELD.value = "";
         toggleGreyedOut();
+        toggleFormSubmit();
     } else {
         return !REGEX.test(string);
     }
@@ -80,6 +80,8 @@ function optionIsSelected() {
     if (CATEGORY_FIELD.value === "no-selection") {
         return false;
     } else {
+        toggleGreyedOut();
+        toggleFormSubmit();
         return true;
     }
 }
@@ -112,15 +114,14 @@ async function uploadWork() {
         formData.append("title", TITLE_FIELD.value);
         formData.append("category", CATEGORY_FIELD.value.slice(-1)); // option-n
         await fetch(WORKS_URL, {
-          method: "POST",
-          body: formData,
-          headers: 
+          "method": "POST",
+          "body": formData,
+          "headers": 
           {
-            accept: "application/json",
-            Authorization: `Bearer ${token}`,
+            "Authorization": `Bearer ${token}`,
           }});
       } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 }
 
@@ -132,8 +133,8 @@ async function submitButton(event) {
         Swal.fire({
             text: "Confirmer l'ajout ?",
             showCancelButton: true,
-            confirmButtonText: "Yes",
-            cancelButtonText: "No"
+            confirmButtonText: "Oui",
+            cancelButtonText: "Non"
         }).then(async (result) => { 
             if (result.isConfirmed) {
                 try {
@@ -145,8 +146,8 @@ async function submitButton(event) {
                         showConfirmButton: false
                     })
                     setModalGallery();
-                } catch (err) {
-                    console.log(err);
+                } catch (error) {
+                    console.error(error);
                 }
             }
         })
@@ -155,15 +156,15 @@ async function submitButton(event) {
 
 // Gestion de la validité du formulaire ///////////////////////////////////////
 function toggleFormSubmit() {
-    CONFIRM_BUTTON.removeEventListener("click", submitButton); // pour éviter l'ajout multiple d'eventListeners
+    MODAL_SUBMIT_BUTTON.removeEventListener("click", submitButton); 
     if (formIsFilled()) {
-        CONFIRM_BUTTON.addEventListener("click", submitButton);
+        MODAL_SUBMIT_BUTTON.addEventListener("click", submitButton);
     }
 }
 
 // Changement de la couleur du bouton de Validation ////////////////////////////
 function toggleGreyedOut() {
-    CONFIRM_BUTTON.classList.toggle("btn--greyed-out", !formIsFilled());
+    MODAL_SUBMIT_BUTTON.classList.toggle("btn--greyed-out", !formIsFilled());
 }
 
 // Affichage de la modale //////////////////////////////////////////////////////
@@ -173,27 +174,30 @@ export async function showModal() {
     await setModalGallery();
 }
 
-// Fermeture de la modale ///////////////////////////////////////////////////
+// Fermeture de la modale /////////////////////////////////////////////////////
 export async function hideModal() {
-    // modules.displayWorks(await modules.fetchData(WORKS_URL), MAIN_GALLERY);
     await setModalGallery();
     LAYER.style.display = "none";
     MODAL_WINDOW.style.display = "none";
 }
 
-// Mise en place du formulaire de la modale //////////////////////////////////////
+// Mise en place du formulaire de la modale ///////////////////////////////////
 async function setModalUploadForm() {
 
     MODAL_GALLERY.style.display = "none";
     MODAL_UPLOAD_FORM.style.display = "flex";
     MODAL_HEADING.textContent = "Ajout photo";
     ADD_PHOTO_BUTTON.style.display = "none";
-    CONFIRM_BUTTON.style.display = "block";
-    CONFIRM_BUTTON.classList.add("btn--greyed-out");
+    MODAL_SUBMIT_BUTTON.style.display = "block";
+    MODAL_SUBMIT_BUTTON.classList.add("btn--greyed-out");
     GO_BACK_BUTTON.style.display = "block";
     GO_BACK_BUTTON.addEventListener("click", setModalGallery);
     TITLE_FIELD.value = "";
     ADD_PHOTO_FIELD.value = "";
+    ADD_PHOTO_FIELD.addEventListener("click", () => { 
+        removeImage();
+        toggleGreyedOut();
+    })
     ADD_PHOTO_FIELD.removeEventListener("input", displayImagePreview);
     ADD_PHOTO_FIELD.addEventListener("input", displayImagePreview);
 
@@ -206,7 +210,7 @@ async function setModalUploadForm() {
         CATEGORY_FIELD.appendChild(option);
     });
 
-    const formFields = [ADD_PHOTO_BUTTON, TITLE_FIELD, CATEGORY_FIELD];
+    const formFields = [ADD_PHOTO_FIELD, TITLE_FIELD, CATEGORY_FIELD];
     formFields.forEach(field => 
         field.removeEventListener("input", toggleGreyedOut));
     formFields.forEach(field =>
@@ -224,8 +228,8 @@ async function setModalGallery() {
     MODAL_UPLOAD_FORM.style.display = "none";
     GO_BACK_BUTTON.style.display = "none";
     MODAL_GALLERY.style.display = "grid";
-    CONFIRM_BUTTON.style.display = "none";
-    CONFIRM_BUTTON.classList.remove("btn--greyed-out");
+    MODAL_SUBMIT_BUTTON.style.display = "none";
+    MODAL_SUBMIT_BUTTON.classList.remove("btn--greyed-out");
     ADD_PHOTO_BUTTON.style.display = "block";
 
     document.querySelectorAll(".photo-upload-container > *").forEach(
@@ -252,3 +256,4 @@ async function handleModal() {
     }
 }
 await handleModal();
+

@@ -201,6 +201,7 @@ body {
 	position: absolute;
 	width: 100%;
 	height: 100%;
+	z-index: 3;
 	opacity: 0;
 	padding: 0;
 	cursor: pointer;
@@ -228,11 +229,6 @@ body {
 	position: absolute;
 	height: 100%;
 	z-index: 2;
-}
-
-#add-photo {
-	z-index: 3;
-	opacity: 0;
 }
 
 .photo-upload-container:hover {
@@ -266,6 +262,10 @@ main {
 	background: #000000;
 	color: #ffffff;
 	gap: 15px;
+}
+
+.editing-mode-banner > span {
+	cursor: pointer;
 }
 
 header {
@@ -317,7 +317,8 @@ nav li {
 }
 
 li:hover {
-	color: #B1663C;
+	color: #B1663C;		    /* Inclus dans le CSS de base mais ne fais pas partie de la maquette ??? */
+	/* font-weight: bold; */     /* Pas trés clair sur la maquette */
 }
 
 #introduction {
@@ -388,6 +389,13 @@ li:hover {
 	border: 1px solid #1D6154;
 	border-radius: 60px;
 	cursor: pointer;
+}
+
+
+
+input[value="Connexion"]:hover,
+input[value="Envoyer"]:hover {
+	background: #0E2F28;
 }
 
 #filters .btn:hover {

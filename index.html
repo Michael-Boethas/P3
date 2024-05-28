@@ -10,11 +10,13 @@
 	<meta name="description" content="">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<link rel="stylesheet" href="./assets/style.css">
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>   <!--  Librairie pour l'affichage des messages d'erreur ou de confirmation -->
 	<script type="module" src="assets/script.js" defer></script>
 	<script type="module" src="assets/modal.js" defer></script>
 </head>
 <body>
+
+<!--------------------- Modale -------------------------------------->
 
 	<div id="layer"></div>
 	<div id="modal">
@@ -28,10 +30,9 @@
 				<i class="fa-regular fa-image"></i>
 				<label for="add-photo">+ Ajouter photo</label>
 				<p>jpg, png : 4mo max</p>
-				<input type="file" name="add-photo" id="add-photo">
+				<input id="add-photo" type="file" name="add-photo">
 			</a>
 			
-
 			<label for="title">Titre</label>
 			<input type="text" name="title" id="title">
 
@@ -43,6 +44,9 @@
 		<input id="modal-upload-form__btn" class="btn btn--greyed-out" type="button" value="Valider">
 	</div>
 
+<!--------------------- Fin de la modale ---------------------------->
+
+
 	<div class="editing-mode-banner"><i class="fa-regular fa-pen-to-square"></i>
 	<span>Mode édition</span></div>
 
@@ -53,7 +57,7 @@
 				<li><a href="./index.html">projets</a></li>
 				<li><a href="#contact">contact</a></li>
 				<li><a href="./login.html">login</a></li>
-				<li><a href="https://www.instagram.com/"><img src="./assets/icons/instagram.png" alt="Instagram"></a></li>
+				<li><a href="https://www.instagram.com/sophiebluel_portfolio/"><img src="./assets/icons/instagram.png" alt="Instagram"></a></li>
 			</ul>
 		</nav>
 	</header>
