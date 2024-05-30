@@ -14,7 +14,7 @@ export async function fetchData(dataUrl) {
                     Swal.fire({
                         icon: "warning",
                         text: `Erreur lors de la réception de données
-                               depuis le serveur: ${error.message}`,
+                               depuis le serveur`,
                         showCloseButton: true,
                         showConfirmButton: false
                     })
@@ -37,7 +37,7 @@ export async function sendData(url, headersJson, bodyJson) {
         Swal.fire({
             icon: "warning",
             text: `Erreur lors de l'envoi de données
-                   au serveur: ${error.message}`,
+                   au serveur`,
             showCloseButton: true,
             showConfirmButton: false
         })
@@ -60,7 +60,7 @@ export async function deleteWorkRequest(id) {
         Swal.fire({
             icon: "warning",
             text: `Erreur de communication avec le serveur lors
-                   de la suppression: ${error.message}`,
+                   de la suppression`,
             showCloseButton: true,
             showConfirmButton: false
         });

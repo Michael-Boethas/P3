@@ -113,15 +113,18 @@ async function uploadWork() {
         formData.append("image", ADD_PHOTO_FIELD.files[0]);
         formData.append("title", TITLE_FIELD.value);
         formData.append("category", CATEGORY_FIELD.value.slice(-1)); // option-n
-        await fetch(WORKS_URL, {
+        const response = await fetch(WORKS_URL, {
           "method": "POST",
           "body": formData,
           "headers": 
           {
             "Authorization": `Bearer ${token}`,
-          }});
-      } catch (error) {
+            }
+        })
+        return response.ok;
+    } catch (error) {
         console.error(error);
+        return false;
     }
 }
 
@@ -137,17 +140,22 @@ async function submitButton(event) {
             cancelButtonText: "Non"
         }).then(async (result) => { 
             if (result.isConfirmed) {
-                try {
-                    await uploadWork();
+                const isSuccess = await uploadWork();
+                if (isSuccess) {
                     Swal.fire({
                         icon: "success",
-                        text: `L'ajout a bien été pris en compte"`,
+                        text: `L'ajout a bien été pris en compte`,
                         showCloseButton: true,
                         showConfirmButton: false
                     })
                     setModalGallery();
-                } catch (error) {
-                    console.error(error);
+                } else {
+                    Swal.fire({
+                        icon: "warning",
+                        text: `Échec de l'ajout`,
+                        showCloseButton: true,
+                        showConfirmButton: false
+                    })
                 }
             }
         })

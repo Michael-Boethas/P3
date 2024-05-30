@@ -317,9 +317,9 @@ nav li {
 	cursor: pointer;
 }
 
-li:hover {
-	color: #B1663C;		    /* Inclus dans le CSS de base mais ne fais pas partie de la maquette ??? */
-	/* font-weight: bold; */     /* Pas trés clair sur la maquette */
+header li:hover {
+	/* color: #B1663C;		Inclus dans le CSS de base mais ne fais pas partie de la maquette*/
+	font-weight: bold;
 }
 
 #introduction {
