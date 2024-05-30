@@ -8,7 +8,7 @@ async function handleLoginButton(event) {
     
     const emailField = document.getElementById("email");
     const passwordField = document.getElementById("password");
-    const loginData = await modules.sendData(USERS_LOGIN_URL,
+    const loginData = await modules.sendData(USERS_LOGIN_URL,   // Envoi des identifiants et réception du token
         {
             "Content-Type": "application/json"
         },

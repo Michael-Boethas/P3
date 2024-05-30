@@ -6,8 +6,6 @@ import { LAYER, MODAL_WINDOW, MODAL_GALLERY, MODAL_UPLOAD_FORM, MODAL_SUBMIT_BUT
 
 
 
-
-
 // Gestion de la selection de Photo /////////////////////////////////////
 function displayImagePreview() {
     if (ADD_PHOTO_FIELD.value !== "") { 
