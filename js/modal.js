@@ -225,6 +225,13 @@ async function setModalUploadForm() {
         field.removeEventListener("input", toggleFormSubmit));
     formFields.forEach(field =>
         field.addEventListener("input", toggleFormSubmit));
+
+    MODAL_UPLOAD_FORM.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            MODAL_SUBMIT_BUTTON.click();
+        }
+    });
 }
 
 
