@@ -4,16 +4,16 @@ import { USERS_LOGIN_URL, LOGIN_SUBMIT_BUTTON, TOKEN_NAME, USER_ID, CONTACT_LINK
 
 // Gestion du login ////////////////////////////////////////////////
 async function handleLoginButton(event) {
-    event.preventDefault();
+    event.preventDefault();                                     // Prévention du raffraîchissement de la page
     
-    const emailField = document.getElementById("email");
+    const emailField = document.getElementById("email");        // Aquisition des identifiants saisis
     const passwordField = document.getElementById("password");
-    const loginData = await modules.sendData(USERS_LOGIN_URL,   // Envoi des identifiants et réception du token
+    const loginData = await modules.sendData(USERS_LOGIN_URL,   // Envoi des identifiants à la route /users/login de l'API et réception du token
         {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json"                  // Données envoyées en JSON
         },
         {
-            "email": emailField.value,
+            "email": emailField.value,                          // Envoi des identifiants saisis dans le body
             "password": passwordField.value
         })
         .catch(error => {
@@ -27,12 +27,12 @@ async function handleLoginButton(event) {
             console.error(error);
         })
 
-    if (loginData.token) {      // Stockage de l'identifiant et du token de connexion
+    if (loginData.token) {                                      // Stockage de l'identifiant et du token de connexion
         sessionStorage.setItem(USER_ID, loginData.userId);
         sessionStorage.setItem(TOKEN_NAME, loginData.token);
-        window.location.href = "./index.html";
+        window.location.href = "./index.html";                  // Redirection après connexion
     } else {
-        passwordField.value = "";   // Suppression du contenu du champs mot de passe 
+        passwordField.value = "";                               // Suppression du contenu du champs mot de passe 
         const existingErrorMessage = document.querySelector(".error-message");
 
         if (!existingErrorMessage) {
@@ -47,7 +47,7 @@ async function handleLoginButton(event) {
     }
 };
 
-LOGIN_SUBMIT_BUTTON.addEventListener("click", handleLoginButton);
+LOGIN_SUBMIT_BUTTON.addEventListener("click", handleLoginButton);   // Attachement de la fonctionnalité login au bouton submit
 
 // Gestion de la redirection vers la section index.html#contact /////////////////////
 CONTACT_LINK.addEventListener("click", () => {

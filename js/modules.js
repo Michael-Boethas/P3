@@ -28,9 +28,9 @@ export async function fetchData(dataUrl) {
 // Envoi des données à l'API //////////////////////////////////////
 export async function sendData(url, headersJson, bodyJson) {
     const response = fetch(url, {
-        "method": "POST",
-        "headers": headersJson,
-        "body": JSON.stringify(bodyJson)
+        "method": "POST",                    // Méthode de la requête fetch
+        "headers": headersJson,              // Headers en JSON
+        "body": JSON.stringify(bodyJson)     // Conversion du JSON en chaine de caractères
     })
     .then(response => response.json())
     .catch(error => {
@@ -82,7 +82,7 @@ export async function setEditMode(){
         PROJECTS_HEADING.style.padding = "0 0 110px 0"
     
         EDIT_BUTTON.style.display = "flex";
-        EDIT_BUTTON.addEventListener("click", showModal);
+        EDIT_BUTTON.addEventListener("click", showModal);   // Bouton d'accès à la modale
 
         MODAL_CLOSE_BUTTON.onclick = hideModal;
         LAYER.onclick = hideModal;
@@ -102,12 +102,12 @@ export function logout() {
 
 // Ajout des travaux au DOM ////////////////////////////////////////
 export async function appendWork(work, gallery) {
-    const item = document.createElement("figure");
+    const item = document.createElement("figure");      // Création des éléments
     const photo = document.createElement("img");
-    photo.src = work.imageUrl;
+    photo.src = work.imageUrl;                          // Réception de l'image et du titre
     photo.alt = work.title;
     item.appendChild(photo);
-    item.dataset.id = work.id;
+    item.dataset.id = work.id;                          // Attribution des identifiants 
     item.dataset.categoryId = work.categoryId;
     item.dataset.userId = work.userId;
     if (gallery === MAIN_GALLERY) {             // Galerie du portfolio avec intitulé
@@ -116,10 +116,10 @@ export async function appendWork(work, gallery) {
         item.appendChild(caption);
     } else {                                    // Galerie de la modale avec icône de suppression
         const trashIcon = document.createElement("i");
-        trashIcon.className = "fa-solid fa-trash-can";
+        trashIcon.className = "fa-solid fa-trash-can";  // Création du bouton supprimer et attribution de l'identifiant
         trashIcon.dataset.id = work.id;
         item.appendChild(trashIcon);
-        trashIcon.addEventListener("click", async (event) => {
+        trashIcon.addEventListener("click", async (event) => {  // Ajout de la fonctionnalité suppression
             await deleteWork(event.target.dataset.id)
             .catch(error => console.error(error));
         });
@@ -153,14 +153,14 @@ export async function deleteWork(id) {
 }
 
 // Rafraichissement de la galerie et affichage des travaux /////////
-export function displayWorks(works, gallery) {
-    gallery.innerHTML = "";
-    works.forEach(work => appendWork(work, gallery));
+export function displayWorks(works, gallery) {          // Prend la galerie cible en paramètre
+    gallery.innerHTML = "";                             // Rafraîchissement de la galerie
+    works.forEach(work => appendWork(work, gallery));   // Ajout des travaux présents dans la liste en paramètre
 }
 
 // Filtrage des travaux par catégorie ///////////////////////////////
 export async function filterWorks(filterCategoryId) {
-    const works = await fetchData(WORKS_URL);
+    const works = await fetchData(WORKS_URL);   // Acquisition des travaux existants
     if (filterCategoryId === "filter-0") {      // Pas de filtre
         displayWorks(works, MAIN_GALLERY);
     } else {                                    // Filtrage par catégorie

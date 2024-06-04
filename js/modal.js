@@ -107,19 +107,19 @@ function checkInputFields() {
 async function uploadWork() {
     try {
         const token = sessionStorage.getItem(TOKEN_NAME);
-        const formData = new FormData();
+        const formData = new FormData();                // Format pour l'envoi des données du formulaire 
         formData.append("image", ADD_PHOTO_FIELD.files[0]);
         formData.append("title", TITLE_FIELD.value);
         formData.append("category", CATEGORY_FIELD.value.slice(-1)); // option-n
-        const response = await fetch(WORKS_URL, {
+        const response = await fetch(WORKS_URL, {       // Envoi des travaux à l'API
           "method": "POST",
           "body": formData,
           "headers": 
           {
-            "Authorization": `Bearer ${token}`,
+            "Authorization": `Bearer ${token}`,     // Authentification
             }
         })
-        return response.ok;
+        return response.ok;                  // Statut de la requête
     } catch (error) {
         console.error(error);
         return false;
@@ -130,7 +130,7 @@ async function uploadWork() {
 // Gestion du bouton d'envoi des données /////////////////////////////////////
 async function submitButton(event) {
     event.preventDefault();
-    if (checkInputFields()) {
+    if (checkInputFields()) {                    // Vérification des champs du formulaire
         Swal.fire({
             text: "Confirmer l'ajout ?",
             showCancelButton: true,
@@ -138,7 +138,7 @@ async function submitButton(event) {
             cancelButtonText: "Non"
         }).then(async (result) => { 
             if (result.isConfirmed) {
-                const isSuccess = await uploadWork();
+                const isSuccess = await uploadWork();    // Fonction d'envoi des travaux
                 if (isSuccess) {
                     Swal.fire({
                         icon: "success",
@@ -146,7 +146,7 @@ async function submitButton(event) {
                         showCloseButton: true,
                         showConfirmButton: false
                     })
-                    setModalGallery();
+                    setModalGallery();             // Affichage de la galerie modale avec le travail ajouté
                 } else {
                     Swal.fire({
                         icon: "warning",
@@ -164,7 +164,7 @@ async function submitButton(event) {
 function toggleFormSubmit() {
     MODAL_SUBMIT_BUTTON.removeEventListener("click", submitButton); 
     if (formIsFilled()) {
-        MODAL_SUBMIT_BUTTON.addEventListener("click", submitButton);
+        MODAL_SUBMIT_BUTTON.addEventListener("click", submitButton);     // Activation du bouton submit
     }
 }
 
@@ -191,7 +191,7 @@ export async function hideModal() {
 async function setModalUploadForm() {
 
     MODAL_GALLERY.style.display = "none";
-    MODAL_UPLOAD_FORM.style.display = "flex";
+    MODAL_UPLOAD_FORM.style.display = "flex";                // Mise en place du formulaire 
     MODAL_HEADING.textContent = "Ajout photo";
     ADD_PHOTO_BUTTON.style.display = "none";
     MODAL_SUBMIT_BUTTON.style.display = "block";
@@ -205,18 +205,18 @@ async function setModalUploadForm() {
         toggleGreyedOut();
     })
     ADD_PHOTO_FIELD.removeEventListener("input", displayImagePreview);
-    ADD_PHOTO_FIELD.addEventListener("input", displayImagePreview);
+    ADD_PHOTO_FIELD.addEventListener("input", displayImagePreview);     // Affichage de l'aperçu
 
     const categories = await modules.fetchData(CATEGORIES_URL);
     CATEGORY_FIELD.innerHTML = "<option value=no-selection></option>";  // Rafraichissement des catégories
-    categories.forEach(category => {
+    categories.forEach(category => {                                    // Ajout dynamique des catégories
         const option = document.createElement("option");
         option.value = "option-" + category.id;
         option.textContent = category.name;
         CATEGORY_FIELD.appendChild(option);
     });
 
-    const formFields = [ADD_PHOTO_FIELD, TITLE_FIELD, CATEGORY_FIELD];
+    const formFields = [ADD_PHOTO_FIELD, TITLE_FIELD, CATEGORY_FIELD];  // Gestion des champs du formulaire
     formFields.forEach(field => 
         field.removeEventListener("input", toggleGreyedOut));
     formFields.forEach(field =>
